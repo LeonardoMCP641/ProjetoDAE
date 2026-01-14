@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pt.ipleiria.estg.dei.ei.dae</groupId>
-    <artifactId>academics2</artifactId>
+    <artifactId>publicacoes-cientificas</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>academics 2.0</name>
+    <name>Plataforma de Gestão de Publicações Científicas</name>
     <packaging>war</packaging>
 
     <properties>
@@ -54,6 +54,7 @@
     </dependencies>
 
     <build>
+        <finalName>academics</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
