@@ -7,10 +7,10 @@
     <list default="true" id="42647a2d-1391-4f1c-b4a7-ba237a018fbc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/dtos/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/dtos/UserDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/UserBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/UserBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/StudentService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/SubjectService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/TeacherService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publicacoes-client/pages/users/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/pages/users/index.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,35 +43,32 @@
   &quot;associatedIndex&quot;: 5
 }</component>
   <component name="ProjectId" id="32n0GiRaGKwomNOnOUnWHjsXIN1" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "HTTP Request.sample-requests | #1.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "Tags",
-    "git-widget-placeholder": "andre",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/andremarques/Desktop/Uni/3Ano/DAE/ProjetoDAE",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "/Applications/IntelliJ IDEA.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;HTTP Request.sample-requests | #1.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;andre&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/andremarques/Desktop/Uni/3Ano/DAE/ProjetoDAE&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/IntelliJ IDEA.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/publicacoes-client" />
@@ -79,7 +76,7 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="sample-requests | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/sample-requests.http" runType="Run single request">
+    <configuration name="sample-requests | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/sample-requests.http" requestIdentifier="#1" runType="Run single request">
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -91,8 +88,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.240" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.240" />
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
       </set>
     </attachedChunks>
   </component>
@@ -105,7 +102,6 @@
       <option name="presentableId" value="Default" />
       <updated>1758040942449</updated>
       <workItem from="1758040943616" duration="5000" />
-      <workItem from="1768408709657" duration="23757000" />
       <workItem from="1768408709657" duration="28170000" />
     </task>
     <servers />
