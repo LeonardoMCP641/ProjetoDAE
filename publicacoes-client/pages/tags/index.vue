@@ -1,0 +1,85 @@
+<template>
+  <div>
+    <h1>Gestão de Tags </h1>
+
+    <div v-if="tags && tags.length > 0">
+      <table>
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="tag in tags" :key="tag.id">
+          <td>{{ tag.id }}</td>
+          <td>{{ tag.name }}</td>
+          <td>
+            <button @click.prevent="deleteTag(tag.id)">Apagar</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div v-else>
+      <p>Ainda não há tags criadas...</p>
+    </div>
+
+    <hr>
+
+    <h2>Criar Nova Tag</h2>
+    <form @submit.prevent="createTag">
+      <input v-model="tagName" placeholder="Nome da Tag (Ex: Java)" required />
+      <button type="submit">Criar</button>
+    </form>
+
+    <p v-if="message" class="mensagem">{{ message }}</p>
+  </div>
+</template>
+
+<script setup>
+const config = useRuntimeConfig()
+const api = config.public.apiBase
+const message = ref('')
+const tagName = ref('')
+
+const { data: tags, error, refresh } = await useFetch(`${api}/tags`)
+
+async function createTag() {
+  try {
+    await $fetch(`${api}/tags`, {
+      method: 'POST',
+      body: { name: tagName.value }
+    })
+
+    message.value = 'Tag criada com sucesso! '
+    tagName.value = ''
+    refresh()
+  } catch (e) {
+    message.value = 'Erro ao criar tag: ' + e
+  }
+}
+
+async function deleteTag(id) {
+  if (!confirm("Tens a certeza que queres apagar?")) return;
+
+  try {
+    await $fetch(`${api}/tags/${id}`, {
+      method: 'DELETE'
+    })
+    message.value = 'Tag apagada!'
+    refresh()
+  } catch (e) {
+    message.value = 'Erro ao apagar: ' + e
+  }
+}
+</script>
+
+<style>
+table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+th { background-color: #f2f2f2; }
+button { cursor: pointer; margin-left: 5px; border: none; border-radius: 5px; }
+.mensagem { color: blue; font-weight: bold; }
+</style>

@@ -73,3 +73,37 @@ contents of the file
 GET http://localhost:8080/academics/api/documents/download/1 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ3aWxsIiwiaWF0IjoxNzY3MTQwNzc3LCJleHAiOjE3NjcxNDQzNzd9.yXMMBMvKDM2K4J3IFDQhiB_mEc0a6Lz7vQGPj4rGy_KRGIfpWf8GukRGYDq2PIp4
 
+### EP10: Listar todas as tags (Vai dar lista vazia [] no início)
+GET http://localhost:8080/publicacoescientificas/api/tags
+Accept: application/json
+
+### EP12: Criar uma Tag nova
+POST http://localhost:8080/publicacoescientificas/api/tags
+Content-Type: application/json
+
+{
+  "name": "ProjetoX"
+}
+
+### EP12: Criar outra Tag
+POST http://localhost:8080/publicacoescientificas/api/tags
+Content-Type: application/json
+
+{
+  "name": "InteligenciaArtificial"
+}
+
+### EP11: Ver detalhes da tag 1 (A do ProjetoX)
+GET http://localhost:8080/publicacoescientificas/api/tags/1
+Accept: application/json
+
+### EP13: Mudar o nome da tag 1 para "ProjetoFinal"
+PUT http://localhost:8080/publicacoescientificas/api/tags/1
+Content-Type: application/json
+
+{
+  "name": "ProjetoFinal"
+}
+
+### EP14: Apagar a tag 2 (InteligenciaArtificial)
+DELETE http://localhost:8080/publicacoescientificas/api/tags/2
