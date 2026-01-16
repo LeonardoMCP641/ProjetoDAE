@@ -92,3 +92,18 @@ Content-Type: application/json
 {
   "name": "InteligenciaArtificial"
 }
+
+### EP11: Ver detalhes da tag 1 (A do ProjetoX)
+GET http://localhost:8080/publicacoescientificas/api/tags/1
+Accept: application/json
+
+### EP13: Mudar o nome da tag 1 para "ProjetoFinal"
+PUT http://localhost:8080/publicacoescientificas/api/tags/1
+Content-Type: application/json
+
+{
+  "name": "ProjetoFinal"
+}
+
+### EP14: Apagar a tag 2 (InteligenciaArtificial)
+DELETE http://localhost:8080/publicacoescientificas/api/tags/2
