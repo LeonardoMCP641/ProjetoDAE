@@ -1,0 +1,75 @@
+POST http://localhost:8080/publicacoescientificas/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "admin",
+  "password": "123"
+}
+
+### Get All Students
+GET http://localhost:8080/academics/api/students
+Accept: application/json
+### Create A New Student
+POST http://localhost:8080/academics/api/students
+Content-Type: application/json
+
+{
+ "email": "johndoe@mail.com",
+ "name": "John Doe",
+ "username": "john",
+ "password": "jd",
+ "courseCode": 1
+}
+
+### Get All Courses
+GET http://localhost:8080/academics/api/courses
+Accept: application/json
+
+### Create A New Course
+POST http://localhost:8080/academics/api/courses
+Content-Type: application/json
+
+{
+  "code": 4,
+  "name": "Gestão"
+}
+
+### Get Student "bruno"
+GET http://localhost:8080/academics/api/students/bruno
+Accept: application/json
+
+### Get Student "bruno" subjects
+GET http://localhost:8080/academics/api/students/bruno/subjects
+Accept: application/json
+
+
+### REQUEST JWT TOKEN
+POST http://localhost:8080/academics/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{ "username": "miguel", "password": "password" }
+
+### GET ALL STUDENTS
+GET http://localhost:8080/academics/api/students
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJtaWd1ZWwiLCJpYXQiOjE3NjcxOTcwNzMsImV4cCI6MTc2NzIwMDY3M30.HA2pzU8y1qLDruZgjx7D3ZccqQjCdFhtI1AOoF0oz7yl8q9LbLxGnxR3urMPD5mt
+
+
+### Upload document
+POST http://localhost:8080/academics/api/documents/upload HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ3aWxsIiwiaWF0IjoxNzY3MTQwNzc3LCJleHAiOjE3NjcxNDQzNzd9.yXMMBMvKDM2K4J3IFDQhiB_mEc0a6Lz7vQGPj4rGy_KRGIfpWf8GukRGYDq2PIp4
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="file1.txt"
+Content-Type: text/plain
+
+contents of the file
+--boundary--
+
+### Download document
+GET http://localhost:8080/academics/api/documents/download/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ3aWxsIiwiaWF0IjoxNzY3MTQwNzc3LCJleHAiOjE3NjcxNDQzNzd9.yXMMBMvKDM2K4J3IFDQhiB_mEc0a6Lz7vQGPj4rGy_KRGIfpWf8GukRGYDq2PIp4
+
