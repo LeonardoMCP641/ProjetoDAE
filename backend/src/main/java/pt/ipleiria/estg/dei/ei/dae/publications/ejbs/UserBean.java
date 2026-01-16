@@ -68,12 +68,13 @@ public class UserBean {
     }
 
     // UPDATE GERAL
-    public User update(String username, String name, String email, Role role, boolean active) {
-        User user = findByUsername(username);
+    public User update(long id, String name, String email, String username, Role role, boolean active) {
+        User user = find(id); // Busca por ID
         if (user == null) return null;
 
         user.setName(name);
-        user.setEmail(email); // Agora é fácil mudar o email!
+        user.setEmail(email);
+        user.setUsername(username);
         if (role != null) user.setRole(role);
         user.setActive(active);
 
