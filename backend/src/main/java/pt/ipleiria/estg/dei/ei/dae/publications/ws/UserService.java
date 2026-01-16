@@ -109,6 +109,32 @@ public class UserService {
         return Response.status(Response.Status.OK).build();
     }
 
+    @DELETE
+    @Path("/{id}")
+    public Response removeUser(@PathParam("id") long id) {
+        // Verificar permissão de Admin
+        if (!securityContext.isUserInRole("Administrador")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        // Impedir que o Admin se apague a si próprio
+        String currentUsername = securityContext.getUserPrincipal().getName();
+        User currentUser = userBean.findByUsername(currentUsername);
+
+        if (currentUser.getId() == id) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Não pode remover a sua própria conta. Peça a outro Administrador.").build();
+        }
+
+        boolean removed = userBean.remove(id);
+
+        if (!removed) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return Response.status(Response.Status.NO_CONTENT).build(); // 204 No Content é padrão para delete
+    }
+
     // 5. MUDAR PASSWORD
 //    @PUT
 //    @Path("/{id}/password")

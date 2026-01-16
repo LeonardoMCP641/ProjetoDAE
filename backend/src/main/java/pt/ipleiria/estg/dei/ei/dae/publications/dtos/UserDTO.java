@@ -15,7 +15,7 @@ public class UserDTO {
 
     public UserDTO() {}
 
-    public UserDTO(long id,String email,String username, String name, String role, boolean active) {
+    public UserDTO(long id,String username,String name, String email, String role, boolean active) {
         this.id = id;
         this.username = username;
         this.name = name;

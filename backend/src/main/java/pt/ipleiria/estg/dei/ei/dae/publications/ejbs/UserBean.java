@@ -101,4 +101,13 @@ public class UserBean {
             //emailBean.send(user.getEmail(), "Nova Password", "Sua password: " + newPass);
         }
     }
+
+    public boolean remove(long id) {
+        User user = find(id);
+        if (user == null) {
+            return false;
+        }
+        entityManager.remove(user);
+        return true;
+    }
 }
