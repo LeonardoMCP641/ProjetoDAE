@@ -5,60 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42647a2d-1391-4f1c-b4a7-ba237a018fbc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/META-INF/application.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/AcademicsApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/HelloResource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/dtos/AuthDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/dtos/EmailDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/dtos/StudentDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/dtos/SubjectDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/dtos/TeacherDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/AdministratorBean.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/ConfigBean.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/CourseBean.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/EmailBean.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/StudentBean.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/SubjectBean.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/TeacherBean.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/UserBean.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/entities/Administrator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/entities/Course.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/entities/Student.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/entities/Subject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/entities/Teacher.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/entities/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/entities/Versionable.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/exceptions/MyConstraintViolationException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/exceptions/MyEntityExistsException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/exceptions/MyEntityNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/exceptions/mapers/ForbiddenExceptionMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/exceptions/mapers/IllegalArgumentExceptionMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/exceptions/mapers/MyConstraintViolationExceptionMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/exceptions/mapers/MyEntityExistsExceptionMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/exceptions/mapers/MyEntityNotFoundExceptionMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/exceptions/mapers/NotAuthorizedExceptionMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/exceptions/mapers/ThrowableMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/providers/CorsFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/security/Authenticated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/security/AuthenticationFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/security/AuthorizationFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/security/Hasher.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/security/TokenIssuer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/AuthService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/CourseService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/StudentService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/SubjectService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/TeacherService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/beans.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/publicacoes-client/app.vue" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/app.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +48,7 @@
   "keyToString": {
     "HTTP Request.sample-requests | #1.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "andre",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/andremarques/Desktop/Uni/3Ano/DAE/ProjetoDAE",
     "node.js.detected.package.eslint": "true",
@@ -150,7 +98,7 @@
       <option name="presentableId" value="Default" />
       <updated>1758040942449</updated>
       <workItem from="1758040943616" duration="5000" />
-      <workItem from="1768408709657" duration="23757000" />
+      <workItem from="1768408709657" duration="26089000" />
     </task>
     <servers />
   </component>
