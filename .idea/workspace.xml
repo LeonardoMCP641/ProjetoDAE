@@ -7,6 +7,7 @@
     <list default="true" id="42647a2d-1391-4f1c-b4a7-ba237a018fbc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publicacoes-client/app.vue" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/app.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +52,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "git-widget-placeholder": "Tags",
+    "git-widget-placeholder": "andre",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/andremarques/Desktop/Uni/3Ano/DAE/ProjetoDAE",
     "node.js.detected.package.eslint": "true",
@@ -101,7 +103,6 @@
       <updated>1758040942449</updated>
       <workItem from="1758040943616" duration="5000" />
       <workItem from="1768408709657" duration="23757000" />
-      <workItem from="1768568478672" duration="1060000" />
     </task>
     <servers />
   </component>
