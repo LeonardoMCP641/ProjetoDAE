@@ -114,15 +114,18 @@ watchEffect(() => {
 async function updateEmail() {
   loadingEmail.value = true;
   try {
-    await $fetch(`${config.public.apiBase}/users/${user.value.username}`, {
+    console.log("Email do form" + emailForm.email);
+    await $fetch(`${config.public.apiBase}/users/${user.value.id}/email`, {
       method: 'PUT',
       headers: { Authorization: `Bearer ${token.value}` },
-      body: { ...user.value, email: emailForm.email }
+      body: { email: emailForm.email }
     });
     await authStore.fetchUser();
     alert("Perfil atualizado com sucesso!");
-  } catch (e) {
-    alert("Erro: " + (e.data || "Não foi possível atualizar."));
+    } catch (e) {
+    console.error("Erro completo:", e); // Isto imprime o objeto de erro todo na consola
+    console.log("Resposta do servidor:", e.data); // Isto imprime a mensagem vinda do Java
+    alert("Erro: " + (e.data || "Ver consola para detalhes"));
   } finally {
     loadingEmail.value = false;
   }
@@ -130,16 +133,23 @@ async function updateEmail() {
 
 async function changePassword() {
   try {
-    await $fetch(`${config.public.apiBase}/users/${user.value.username}/password`, {
+    // ALTERAÇÃO: Mudar de user.value.username para user.value.id
+    await $fetch(`${config.public.apiBase}/users/${user.value.id}/password`, {
       method: 'PUT',
       headers: { Authorization: `Bearer ${token.value}` },
-      body: passData
+      body: passData // passData já tem oldPassword e newPassword
     });
+
     alert("Password alterada com sucesso!");
+
+    // Limpar os campos após o sucesso
     passData.oldPassword = '';
     passData.newPassword = '';
+
   } catch (e) {
-    alert("Erro: Verifique se a password atual está correta.");
+    // ALTERAÇÃO: Mostrar a mensagem específica enviada pelo Java (ex: "Password antiga incorreta")
+    console.error("Erro ao mudar password:", e);
+    alert("Erro: " + (e.data || "Verifique se a password atual está correta."));
   }
 }
 
