@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42647a2d-1391-4f1c-b4a7-ba237a018fbc" name="Changes" comment="">
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -15,6 +16,15 @@
 =======
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
 >>>>>>> Stashed changes
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/UserBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/UserBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/providers/CorsFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/providers/CorsFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publicacoes-client/pages/auth/login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/pages/auth/login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publicacoes-client/pages/users/profile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/pages/users/profile.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publicacoes-client/stores/auth-store.js" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/stores/auth-store.js" afterDir="false" />
+>>>>>>> 4e1edce4150634bf6fb07500cc5507bdfe832f94
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

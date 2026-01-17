@@ -54,7 +54,9 @@
           </div>
 
           <div class="card-footer text-center py-3">
-            <small class="text-muted">Esqueceu-se da password?</small>
+            <NuxtLink to="/auth/forgot-password" class="text-decoration-none">
+              <small class="text-primary fw-bold">Esqueceu-se da password? Clique aqui.</small>
+            </NuxtLink>
           </div>
         </div>
 
