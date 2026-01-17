@@ -35,6 +35,11 @@
 
             <!-- === SE ESTIVER LOGADO === -->
             <template v-if="token">
+              <li class="nav-item">
+                <NuxtLink class="nav-link" active-class="active" to="/tags">
+                  Gestão Tags
+                </NuxtLink>
+              </li>
 
               <!-- Link Admin (Só aparece se for Administrador) -->
               <li class="nav-item" v-if="user?.role === 'Administrador'">

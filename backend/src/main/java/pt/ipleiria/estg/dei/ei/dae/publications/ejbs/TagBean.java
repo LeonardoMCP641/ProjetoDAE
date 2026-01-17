@@ -41,6 +41,11 @@ public class TagBean {
         Tag tag = em.find(Tag.class, id);
 
         if (tag != null) {
+
+            for (User user : tag.getSubscribers()) {
+                user.removeSubscription(tag);
+                em.merge(user);
+            }
             em.remove(tag);
         }
     }

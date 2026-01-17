@@ -23,7 +23,7 @@ public class Tag implements Serializable {
     @NotNull
     private String name;
 
-    @ManyToMany(mappedBy = "subscribedTags")
+    @ManyToMany(mappedBy = "subscribedTags", fetch = FetchType.EAGER)
     private List<User> subscribers;
 
     public Tag() {
