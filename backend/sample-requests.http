@@ -1,77 +1,3 @@
-POST http://localhost:8080/publicacoescientificas/api/auth/login
-Content-Type: application/json
-Accept: application/json
-
-{
-  "username": "admin",
-  "password": "123"
-}
-
-### Get All Students
-GET http://localhost:8080/academics/api/students
-Accept: application/json
-### Create A New Student
-POST http://localhost:8080/academics/api/students
-Content-Type: application/json
-
-{
- "email": "johndoe@mail.com",
- "name": "John Doe",
- "username": "john",
- "password": "jd",
- "courseCode": 1
-}
-
-### Get All Courses
-GET http://localhost:8080/academics/api/courses
-Accept: application/json
-
-### Create A New Course
-POST http://localhost:8080/academics/api/courses
-Content-Type: application/json
-
-{
-  "code": 4,
-  "name": "Gestão"
-}
-
-### Get Student "bruno"
-GET http://localhost:8080/academics/api/students/bruno
-Accept: application/json
-
-### Get Student "bruno" subjects
-GET http://localhost:8080/academics/api/students/bruno/subjects
-Accept: application/json
-
-
-### REQUEST JWT TOKEN
-POST http://localhost:8080/academics/api/auth/login
-Content-Type: application/json
-Accept: application/json
-
-{ "username": "miguel", "password": "password" }
-
-### GET ALL STUDENTS
-GET http://localhost:8080/academics/api/students
-Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJtaWd1ZWwiLCJpYXQiOjE3NjcxOTcwNzMsImV4cCI6MTc2NzIwMDY3M30.HA2pzU8y1qLDruZgjx7D3ZccqQjCdFhtI1AOoF0oz7yl8q9LbLxGnxR3urMPD5mt
-
-
-### Upload document
-POST http://localhost:8080/academics/api/documents/upload HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ3aWxsIiwiaWF0IjoxNzY3MTQwNzc3LCJleHAiOjE3NjcxNDQzNzd9.yXMMBMvKDM2K4J3IFDQhiB_mEc0a6Lz7vQGPj4rGy_KRGIfpWf8GukRGYDq2PIp4
-Content-Type: multipart/form-data; boundary=boundary
-
---boundary
-Content-Disposition: form-data; name="file"; filename="file1.txt"
-Content-Type: text/plain
-
-contents of the file
---boundary--
-
-### Download document
-GET http://localhost:8080/academics/api/documents/download/1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ3aWxsIiwiaWF0IjoxNzY3MTQwNzc3LCJleHAiOjE3NjcxNDQzNzd9.yXMMBMvKDM2K4J3IFDQhiB_mEc0a6Lz7vQGPj4rGy_KRGIfpWf8GukRGYDq2PIp4
 
 ### EP10: Listar todas as tags (Vai dar lista vazia [] no início)
 GET http://localhost:8080/publicacoescientificas/api/tags
@@ -107,3 +33,67 @@ Content-Type: application/json
 
 ### EP14: Apagar a tag 2 (InteligenciaArtificial)
 DELETE http://localhost:8080/publicacoescientificas/api/tags/2
+
+
+
+###EP20: Criar uma nova publicação científica
+POST http://localhost:8080/publicacoescientificas/api/publications
+Content-Type: application/json
+
+{
+  "titulo": "Deep Learning aplicado à análise de dados científicos",
+  "autores": ["João A", "Maria C", "Joana B"],
+  "area": "Ciência de Dados",
+  "tipo": "Artigo Científico",
+  "resumoCurto": "Artigo sobre métodos de redes neurais...",
+  "username": "ColaboradorA",
+  "visivel": false
+}
+
+
+
+
+###EP21: Listar todas as publicações
+GET http://localhost:8080/publicacoescientificas/api/publications/
+Accept: application/json
+
+
+###EP22: Listar publicações por ID
+GET http://localhost:8080/publicacoescientificas/api/publications/1
+Accept: application/json
+
+
+###EP23: Atualizar uma publicação (tornar visível)
+PUT http://localhost:8080/publicacoescientificas/api/publications/1
+Content-Type: application/json
+
+{
+  "titulo": "Deep Learning aplicado à análise de dados científicos (Versão Atualizada)",
+  "autores": ["João A", "Maria C", "Joana BBBB"],
+  "area": "Ciência de Dados",
+  "tipo": "Artigo Científico",
+  "resumoCurto": "Atualização com novos resultados...",
+  "visivel": true
+}
+
+
+###EP24: Apagar uma publicação
+DELETE http://localhost:8080/publicacoescientificas/api/publications/3
+
+
+###EP25: Upload de ficheiro para uma publicação
+POST http://localhost:8080/publicacoescientificas/api/publications/1/upload
+Authorization: Bearer << insert token here >>
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="ProjetoX.pdf"
+Content-Type: application/pdf
+
+<conteúdo do ficheiro aqui>
+--boundary--
+
+
+###EP26: Download de ficheiro de uma publicação
+GET http://localhost:8080/publicacoescientificas/api/publications/1/download
+Authorization: Bearer << insert token here >>

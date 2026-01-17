@@ -1,4 +1,15 @@
+version: "3.8"
+
 services:
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    restart: unless-stopped
+
   db:
     image: bitnami/postgresql
     ports:
@@ -7,10 +18,12 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
       - POSTGRES_DB=${DB_NAME}
+
   smtp:
     image: ghusta/fakesmtp
     ports:
       - "2525:25"
+
   webserver:
     build: .
     ports:
@@ -26,6 +39,11 @@ services:
       - DB_NAME
       - WILDFLY_ADMIN_PASSWORD
       - POSTGRES_DRIVER_VERSION
+      - OLLAMA_BASE_URL=http://ollama:11434
     depends_on:
       - db
       - smtp
+      - ollama
+
+volumes:
+  ollama:
