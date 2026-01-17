@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42647a2d-1391-4f1c-b4a7-ba237a018fbc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publicacoes-client/layouts/default.vue" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/layouts/default.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publicacoes-client/nuxt.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/nuxt.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publicacoes-client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publicacoes-client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/UserBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ejbs/UserBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/providers/CorsFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/providers/CorsFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/pt/ipleiria/estg/dei/ei/dae/publications/ws/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publicacoes-client/pages/auth/login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/pages/auth/login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publicacoes-client/pages/users/profile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/pages/users/profile.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publicacoes-client/stores/auth-store.js" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/stores/auth-store.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
