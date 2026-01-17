@@ -2,6 +2,13 @@
   <div>
     <h1>Gestão de Tags </h1>
 
+    <div v-if="authStore.isAuthenticated">
+      <p>Olá! Estás logada. Podes subscrever tags.</p>
+    </div>
+    <div v-else>
+      <nuxt-link to="/auth/login">Faz Login para subscreveres tags!</nuxt-link>
+    </div>
+
     <div v-if="tags && tags.length > 0">
       <table>
         <thead>
@@ -17,6 +24,10 @@
           <td>{{ tag.name }}</td>
           <td>
             <button @click.prevent="deleteTag(tag.id)">Apagar</button>
+
+            <button @click="subscribe(tag.id)" class="btn-sub">Subscrever</button>
+
+            <button @click="unsubscribe(tag.id)">Anular Subscrição</button>
           </td>
         </tr>
         </tbody>
@@ -40,6 +51,7 @@
 
 <script setup>
 const config = useRuntimeConfig()
+const authStore = useAuthStore()
 const api = config.public.apiBase
 const message = ref('')
 const tagName = ref('')
@@ -74,6 +86,41 @@ async function deleteTag(id) {
     message.value = 'Erro ao apagar: ' + e
   }
 }
+
+async function subscribe(tagId) {
+  if (!authStore.isAuthenticated) {
+    return alert("Tens de fazer login primeiro!")
+  }
+
+  try {
+    await $fetch(`${api}/tags/${tagId}/subscricao`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authStore.token}`
+      }
+    })
+    message.value = `Subscreveste a tag ${tagId}! 🎉`
+  } catch (e) {
+    message.value = "Erro ao subscrever: " + e
+  }
+}
+
+async function unsubscribe(tagId) {
+  if (!authStore.isAuthenticated) return;
+
+  try {
+    await $fetch(`${api}/tags/${tagId}/subscricao`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authStore.token}`
+      }
+    })
+    message.value = `Deixaste de seguir a tag ${tagId}.`
+  } catch (e) {
+    message.value = "Erro: " + e
+  }
+}
+
 </script>
 
 <style>
@@ -81,5 +128,6 @@ table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
 th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
 th { background-color: #f2f2f2; }
 button { cursor: pointer; margin-left: 5px; border: none; border-radius: 5px; }
+.btn-sub { background-color: pink; color: black; border: none; margin-left: 5px;}
 .mensagem { color: blue; font-weight: bold; }
 </style>

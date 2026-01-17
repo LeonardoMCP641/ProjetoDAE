@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.enumeration.Role;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -42,7 +44,17 @@ public class User implements Serializable {
     // O Administrador pode ativar/desativar utilizadores
     private boolean active = true;
 
-    public User() {}
+    @ManyToMany
+    @JoinTable(
+            name = "users_tags",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id")
+    )
+    private List<Tag> subscribedTags;
+
+    public User() {
+        this.subscribedTags = new ArrayList<>();
+    }
 
     public User(String username, String password, String name, String email, Role role) {
         this.username = username;
@@ -51,6 +63,25 @@ public class User implements Serializable {
         this.email = email;
         this.role = role;
         this.active = true;
+        this.subscribedTags = new ArrayList<>();
+    }
+
+    public void addSubscription(Tag tag) {
+        if (!subscribedTags.contains(tag)) {
+            subscribedTags.add(tag);
+        }
+    }
+
+    public void removeSubscription(Tag tag) {
+        subscribedTags.remove(tag);
+    }
+
+    public List<Tag> getSubscribedTags() {
+        return subscribedTags;
+    }
+
+    public void setSubscribedTags(List<Tag> subscribedTags) {
+        this.subscribedTags = subscribedTags;
     }
 
     public long getId() { return id; }
