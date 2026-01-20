@@ -11,6 +11,7 @@ import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.CommentBean;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.PublicationBean;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.UserBean;
+import pt.ipleiria.estg.dei.ei.dae.publications.entities.Comment;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.User;
 import pt.ipleiria.estg.dei.ei.dae.publications.security.Authenticated;
@@ -62,6 +63,7 @@ public class PublicationService {
     /** Criar nova publicação */
     @POST
     @Path("/")
+    @Authenticated
     public Response createPublication(PublicationDTO dto) {
         String username = securityContext.getUserPrincipal().getName();
         User user = userBean.findByUsername(username);
@@ -127,6 +129,7 @@ public class PublicationService {
 
     @POST
     @Path("{id}/tags/{tagId}")
+
     public Response associateTag(@PathParam("id") long publicationId, @PathParam("tagId") long tagId) {
         publicationBean.associarTag(publicationId, tagId);
         return Response.ok().build();
@@ -215,27 +218,16 @@ public class PublicationService {
 
         return Response.status(Response.Status.CREATED).build();
     }
+    @POST
+    @Path("comentarios/{id}/ocultar")
+    @RolesAllowed({"Responsavel", "Administrador"})
+    public Response toggleCommentVisibility(@PathParam("id") long commentId) {
 
-    @DELETE
-    @Path("comentarios/{id}")
-    @Authenticated
-    public Response deleteComment(@PathParam("id") long commentId) {
-        String username = securityContext.getUserPrincipal().getName();
-        User user = userBean.findByUsername(username);
-
-        var comment = commentBean.find(commentId);
-        if (comment == null) {
+        boolean success = commentBean.toggleVisibility(commentId);
+        if (!success) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        boolean isOwner = comment.getUser().getUsername().equals(username);
-        boolean isAdmin = user.getRole().toString().equals("Administrador");
-
-        if (!isOwner && !isAdmin) {
-            return Response.status(Response.Status.FORBIDDEN).entity("Não tens permissão para apagar este comentário.").build();
-        }
-
-        commentBean.delete(commentId);
         return Response.ok().build();
     }
 }
