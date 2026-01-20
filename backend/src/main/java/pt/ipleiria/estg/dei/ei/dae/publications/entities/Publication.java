@@ -54,6 +54,9 @@ public class Publication implements Serializable {
     @NotNull
     private User user;
 
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PublicationHistory> history = new ArrayList<>();
+
     @OneToMany(mappedBy = "publication", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Rating> ratings;
 
@@ -179,4 +182,11 @@ public class Publication implements Serializable {
 
     public double getRatingAverage() { return ratingAverage; }
     public void setRatingAverage(double ratingAverage) { this.ratingAverage = ratingAverage; }
+
+    public List<PublicationHistory> getHistory() {
+        return history;
+    }
+    public void setHistory(List<PublicationHistory> history) {
+        this.history = history;
+    }
 }
