@@ -1,99 +1,163 @@
+### ==================================================================================
+### 1. AUTENTICAÇÃO (OBRIGATÓRIO PARA COMEÇAR) 🔐
+### ==================================================================================
 
-### EP10: Listar todas as tags (Vai dar lista vazia [] no início)
+### Login (Para receber o Token)
+POST http://localhost:8080/publicacoescientificas/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123"
+}
+
+### ⚠️ COPIA O TOKEN DA RESPOSTA E SUBSTITUI EM BAIXO! ⚠️
+
+### ==================================================================================
+### 2. GESTÃO DE TAGS 🏷️
+### ==================================================================================
+
+### Listar todas as tags
 GET http://localhost:8080/publicacoescientificas/api/tags
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
-### EP12: Criar uma Tag nova
+### Criar Tag "Java"
 POST http://localhost:8080/publicacoescientificas/api/tags
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 {
-  "name": "ProjetoX"
+  "name": "Java"
 }
 
-### EP12: Criar outra Tag
+### Criar Tag "Python"
 POST http://localhost:8080/publicacoescientificas/api/tags
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 {
-  "name": "InteligenciaArtificial"
+  "name": "Python"
 }
 
-### EP11: Ver detalhes da tag 1 (A do ProjetoX)
-GET http://localhost:8080/publicacoescientificas/api/tags/1
-Accept: application/json
-
-### EP13: Mudar o nome da tag 1 para "ProjetoFinal"
-PUT http://localhost:8080/publicacoescientificas/api/tags/1
-Content-Type: application/json
-
-{
-  "name": "ProjetoFinal"
-}
-
-### EP14: Apagar a tag 2 (InteligenciaArtificial)
+### Apagar uma Tag (Atenção ao ID! Se a BD reiniciou, usa 1 ou 2)
 DELETE http://localhost:8080/publicacoescientificas/api/tags/2
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
+### ==================================================================================
+### 3. GESTÃO DE PUBLICAÇÕES 📚
+### (Nota: O URL mudou de 'publications' para 'publicacoes')
+### ==================================================================================
 
-
-###EP20: Criar uma nova publicação científica
-POST http://localhost:8080/publicacoescientificas/api/publications
+### Criar uma Nova Publicação
+POST http://localhost:8080/publicacoescientificas/api/publicacoes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 {
-  "titulo": "Deep Learning aplicado à análise de dados científicos",
-  "autores": ["João A", "Maria C", "Joana B"],
-  "area": "Ciência de Dados",
-  "tipo": "Artigo Científico",
-  "resumoCurto": "Artigo sobre métodos de redes neurais...",
-  "username": "ColaboradorA",
-  "visivel": false
-}
-
-
-
-
-###EP21: Listar todas as publicações
-GET http://localhost:8080/publicacoescientificas/api/publications/
-Accept: application/json
-
-
-###EP22: Listar publicações por ID
-GET http://localhost:8080/publicacoescientificas/api/publications/1
-Accept: application/json
-
-
-###EP23: Atualizar uma publicação (tornar visível)
-PUT http://localhost:8080/publicacoescientificas/api/publications/1
-Content-Type: application/json
-
-{
-  "titulo": "Deep Learning aplicado à análise de dados científicos (Versão Atualizada)",
-  "autores": ["João A", "Maria C", "Joana BBBB"],
-  "area": "Ciência de Dados",
-  "tipo": "Artigo Científico",
-  "resumoCurto": "Atualização com novos resultados...",
+  "titulo": "Deep Learning para Totós",
+  "autores": ["Matilde", "João"],
+  "area": "Inteligência Artificial",
+  "tipo": "Artigo",
+  "resumoCurto": "Um guia muito simples.",
   "visivel": true
 }
 
+### Listar TODAS as Publicações
+GET http://localhost:8080/publicacoescientificas/api/publicacoes
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
-###EP24: Apagar uma publicação
-DELETE http://localhost:8080/publicacoescientificas/api/publications/3
+### Ver Detalhes da Publicação 1
+GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
+### Atualizar Publicação 1
+PUT http://localhost:8080/publicacoescientificas/api/publicacoes/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
-###EP25: Upload de ficheiro para uma publicação
-POST http://localhost:8080/publicacoescientificas/api/publications/1/upload
-Authorization: Bearer << insert token here >>
+{
+  "titulo": "Deep Learning Avançado (Editado)",
+  "autores": ["Matilde", "João", "Ana"],
+  "area": "Inteligência Artificial",
+  "tipo": "Artigo",
+  "resumoCurto": "Versão atualizada.",
+  "visivel": true
+}
+
+### ==================================================================================
+### 4. ASSOCIAÇÃO (COLAR ETIQUETAS) 🔗
+### ==================================================================================
+
+### Associar a Tag 1 (Java) à Publicação 1
+# Confirma se os IDs 1 existem na tua base de dados!
+POST http://localhost:8080/publicacoescientificas/api/publicacoes/1/tags/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+
+### Verificar se ficou colada (Vê a lista "tags" na resposta)
+GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+
+### Desassociar (Remover a etiqueta)
+DELETE http://localhost:8080/publicacoescientificas/api/publicacoes/1/tags/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+
+### ==================================================================================
+### 5. FICHEIROS (UPLOAD & DOWNLOAD) 📂
+### ==================================================================================
+
+### Upload de Ficheiro (Simulação)
+# Nota: O IntelliJ HTTP Client precisa que o ficheiro "teste.pdf" exista na pasta do projeto
+# Ou então cria um ficheiro de texto simples para testar.
+POST http://localhost:8080/publicacoescientificas/api/publicacoes/1/upload
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="ProjetoX.pdf"
-Content-Type: application/pdf
+Content-Disposition: form-data; name="file"; filename="meu_artigo.txt"
+Content-Type: text/plain
 
-<conteúdo do ficheiro aqui>
+Isto é o conteúdo do ficheiro de teste da Matilde.
 --boundary--
 
+### Download do Ficheiro
+GET http://localhost:8080/publicacoescientificas/api/publicacoes/1/download
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
-###EP26: Download de ficheiro de uma publicação
-GET http://localhost:8080/publicacoescientificas/api/publications/1/download
-Authorization: Bearer << insert token here >>
+### ==================================================================================
+### 6. TESTAR COMENTÁRIOS E RESPOSTAS 💬
+### ==================================================================================
+
+### 1. Criar um Comentário Normal (Raiz) na Publicação 1
+POST http://localhost:8080/publicacoescientificas/api/publicacoes/1/comentarios
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+
+{
+  "text": "Este artigo está muito interessante! Parabéns."
+}
+
+### 2. Ver qual é o ID do comentário criado
+# Corre este GET e procura o "id" do comentário que acabaste de criar (vamos imaginar que é o ID 1)
+GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+
+### 3. RESPONDER ao Comentário 1 (Criar um filho)
+# O URL é .../comentarios/ID_DO_PAI/resposta
+POST http://localhost:8080/publicacoescientificas/api/publicacoes/comentarios/1/resposta
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+
+{
+  "text": "Obrigado! Fico contente que tenhas gostado. 😊"
+}
+
+### 4. Ver a "Conversa" toda
+GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+
+### Apagar o comentário 1
+DELETE http://localhost:8080/publicacoescientificas/api/publicacoes/comentarios/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
