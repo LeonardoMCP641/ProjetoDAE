@@ -17,6 +17,7 @@ import java.util.List;
         // Query para login
         @NamedQuery(name = "getUserByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
         @NamedQuery(name = "getUserByUsername", query = "SELECT u FROM User u WHERE u.username = :username")
+        @NamedQuery(name = "getUsersBySubscribedTag", query = "SELECT u FROM User u JOIN u.subscribedTags t WHERE t.id = :tagId")
 })
 public class User implements Serializable {
 

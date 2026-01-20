@@ -146,4 +146,18 @@ public class PublicationService {
                 .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
                 .build();
     }
+
+    @GET
+    @Path("/")
+    public List<PublicationDTO> getAllPublications(
+            @QueryParam("q") String query,
+            @QueryParam("area") String area,
+            @QueryParam("tipo") String tipo
+    ) {
+        // Se tiver filtros, usa o search, senão usa o listAll
+        if (query != null || area != null || tipo != null) {
+            return PublicationDTO.from(publicationBean.search(query, area, tipo));
+        }
+        return PublicationDTO.from(publicationBean.listAll());
+    }
 }
