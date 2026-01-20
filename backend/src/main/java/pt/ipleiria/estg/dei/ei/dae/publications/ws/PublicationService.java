@@ -4,13 +4,14 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.PublicationBean;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.UserBean;
-import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.User;
+import pt.ipleiria.estg.dei.ei.dae.publications.security.Authenticated;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,10 +21,10 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-@Path("publications")
+@Path("publicacoes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed({"Student", "Administrator"})
+@Authenticated
 public class PublicationService {
 
     @EJB
@@ -32,29 +33,16 @@ public class PublicationService {
     @EJB
     private UserBean userBean;
 
-    private static final String UPLOAD_DIR = "/tmp/uploads/publications"; // altera para o teu diretório
+    @Context
+    private SecurityContext securityContext;
 
-    /** Criar nova publicação */
-    @POST
-    public Response createPublication(PublicationDTO dto) {
-        if (dto.getUsername() == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Username é obrigatório").build();
-        }
-
-        User user = userBean.findByUsername(dto.getUsername());
-        if (user == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("User não encontrado").build();
-        }
-
-        Publication p = publicationBean.create(dto, user);
-        return Response.status(Response.Status.CREATED).entity(new PublicationDTO(p)).build();
-    }
+    private static final String UPLOAD_DIR = "C:/Users/Matilde/Desktop";
 
     /** Listar todas as publicações */
     @GET
-    public Response listPublications() {
-        List<Publication> publications = publicationBean.listAll();
-        return Response.ok(PublicationDTO.from(publications)).build();
+    @Path("/")
+    public List<PublicationDTO> getAllPublications() {
+        return PublicationDTO.from(publicationBean.listAll());
     }
 
     /** Obter publicação por ID */
@@ -64,6 +52,21 @@ public class PublicationService {
         Publication p = publicationBean.find(id);
         if (p == null) return Response.status(Response.Status.NOT_FOUND).build();
         return Response.ok(new PublicationDTO(p)).build();
+    }
+
+    /** Criar nova publicação */
+    @POST
+    @Path("/")
+    public Response createPublication(PublicationDTO dto) {
+        String username = securityContext.getUserPrincipal().getName();
+        User user = userBean.findByUsername(username);
+
+        if (user == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        Publication p = publicationBean.create(dto, user);
+        return Response.status(Response.Status.CREATED).entity(new PublicationDTO(p)).build();
     }
 
     /** Atualizar publicação */
@@ -87,6 +90,7 @@ public class PublicationService {
     /** Apagar publicação */
     @DELETE
     @Path("{id}")
+    @RolesAllowed({"Responsavel", "Administrador"})
     public Response deletePublication(@PathParam("id") long id) {
         Publication p = publicationBean.find(id);
         if (p == null) return Response.status(Response.Status.NOT_FOUND).build();
@@ -95,7 +99,21 @@ public class PublicationService {
         return Response.noContent().build();
     }
 
-    /** Upload de ficheiro associado à publicação */
+
+    @POST
+    @Path("{id}/tags/{tagId}")
+    public Response associateTag(@PathParam("id") long publicationId, @PathParam("tagId") long tagId) {
+        publicationBean.associarTag(publicationId, tagId);
+        return Response.ok().build();
+    }
+
+    @DELETE
+    @Path("{id}/tags/{tagId}")
+    public Response dissociateTag(@PathParam("id") long publicationId, @PathParam("tagId") long tagId) {
+        publicationBean.desassociarTag(publicationId, tagId);
+        return Response.ok().build();
+    }
+
     @POST
     @Path("{id}/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -104,9 +122,13 @@ public class PublicationService {
         if (p == null) return Response.status(Response.Status.NOT_FOUND).entity("Publicação não encontrada").build();
 
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+
+        if (!uploadForm.containsKey("file") || uploadForm.get("file").isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Ficheiro em falta").build();
+        }
+
         InputPart filePart = uploadForm.get("file").get(0);
 
-        // Extrair filename
         String contentDisposition = filePart.getHeaders().getFirst("Content-Disposition");
         String filename = contentDisposition.replaceFirst("(?i)^.*filename=\"?([^\"]+)\"?.*$", "$1");
 
@@ -120,7 +142,6 @@ public class PublicationService {
             in.transferTo(out);
         }
 
-        // Atualiza a publicação com nome e caminho do ficheiro
         p.setFilename(filename);
         p.setFilepath(filepath.toString());
         publicationBean.update(p);
@@ -128,7 +149,6 @@ public class PublicationService {
         return Response.ok("Ficheiro carregado com sucesso: " + filename).build();
     }
 
-    /** Download de ficheiro associado à publicação */
     @GET
     @Path("{id}/download")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -136,14 +156,17 @@ public class PublicationService {
         Publication p = publicationBean.find(id);
         if (p == null) return Response.status(Response.Status.NOT_FOUND).build();
 
-        java.nio.file.Path filepath = Paths.get(p.getFilepath());
-        if (!Files.exists(filepath) || !Files.isRegularFile(filepath)) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Ficheiro não encontrado").build();
+        if (p.getFilepath() == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Esta publicação não tem ficheiro").build();
         }
 
-        String filename = p.getFilename();
+        java.nio.file.Path filepath = Paths.get(p.getFilepath());
+        if (!Files.exists(filepath) || !Files.isRegularFile(filepath)) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Ficheiro físico não encontrado").build();
+        }
+
         return Response.ok(filepath.toFile())
-                .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+                .header("Content-Disposition", "attachment; filename=\"" + p.getFilename() + "\"")
                 .build();
     }
 }
