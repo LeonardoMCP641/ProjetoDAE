@@ -17,6 +17,8 @@ public class PublicationDTO {
     private String filepath;
     private boolean visivel;
     private String username;
+    private double ratingAverage;
+    private int ratingCount;
 
     private List<TagDTO> tags = new ArrayList<>();
 
@@ -37,6 +39,8 @@ public class PublicationDTO {
         this.username = p.getUser() != null ? p.getUser().getUsername() : null;
         this.tags = TagDTO.from(p.getTags());
         this.comments = CommentDTO.from(p.getComments());
+        this.ratingAverage = p.getRatingAverage();
+        this.ratingCount = p.getRatings().size();
     }
 
     public static List<PublicationDTO> from(List<Publication> publications) {
@@ -130,4 +134,12 @@ public class PublicationDTO {
     public List<CommentDTO> getComments() { return comments; }
 
     public void setComments(List<CommentDTO> comments) { this.comments = comments; }
+
+    public double getRatingAverage() { return ratingAverage; }
+
+    public void setRatingAverage(double ratingAverage) { this.ratingAverage = ratingAverage; }
+
+    public int getRatingCount() { return ratingCount; }
+
+    public void setRatingCount(int ratingCount) { this.ratingCount = ratingCount; }
 }

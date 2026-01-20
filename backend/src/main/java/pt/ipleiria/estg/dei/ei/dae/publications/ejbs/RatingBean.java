@@ -26,7 +26,7 @@ public class RatingBean {
             pub.addRating(rating);
 
             em.persist(rating);
-            em.merge(pub); 
+            em.merge(pub);
         }
     }
 }
