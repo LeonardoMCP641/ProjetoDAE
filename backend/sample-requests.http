@@ -66,12 +66,13 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxM
 ### Listar TODAS as Publicações
 GET http://localhost:8080/publicacoescientificas/api/publicacoes
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkzMTM5NywiZXhwIjoxNzY4OTM0OTk3fQ.zkzk3oC6cdCCN30hO1vh0Y4z9uE44laurJ5Zl2BtSmm3o7kj5kDMj2a4p6eszgat
 
 ### Ver Detalhes da Publicação 1
 GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkzMTM5NywiZXhwIjoxNzY4OTM0OTk3fQ.zkzk3oC6cdCCN30hO1vh0Y4z9uE44laurJ5Zl2BtSmm3o7kj5kDMj2a4p6eszgat
+
 
 ### Atualizar Publicação 1
 PUT http://localhost:8080/publicacoescientificas/api/publicacoes/1
