@@ -6,7 +6,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import pt.ipleiria.estg.dei.ei.dae.publications.dtos.CommentDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
+import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.CommentBean;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.PublicationBean;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.UserBean;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
@@ -29,6 +31,9 @@ public class PublicationService {
 
     @EJB
     private PublicationBean publicationBean;
+
+    @EJB
+    private CommentBean commentBean;
 
     @EJB
     private UserBean userBean;
@@ -168,5 +173,49 @@ public class PublicationService {
         return Response.ok(filepath.toFile())
                 .header("Content-Disposition", "attachment; filename=\"" + p.getFilename() + "\"")
                 .build();
+    }
+
+    @POST
+    @Authenticated
+    @Path("{id}/comentarios")
+    public Response commentPublication(@PathParam("id") long publicationId, pt.ipleiria.estg.dei.ei.dae.publications.dtos.CommentDTO commentDTO) {
+
+        String username = securityContext.getUserPrincipal().getName();
+        commentBean.create(publicationId, username, commentDTO.getText());
+        return Response.status(Response.Status.CREATED).build();
+    }
+
+    @POST
+    @Path("comentarios/{id}/resposta")
+    @Authenticated
+    public Response replyToComment(@PathParam("id") long parentCommentId, CommentDTO commentDTO) {
+        String username = securityContext.getUserPrincipal().getName();
+
+        commentBean.reply(parentCommentId, username, commentDTO.getText());
+
+        return Response.status(Response.Status.CREATED).build();
+    }
+
+    @DELETE
+    @Path("comentarios/{id}")
+    @Authenticated
+    public Response deleteComment(@PathParam("id") long commentId) {
+        String username = securityContext.getUserPrincipal().getName();
+        User user = userBean.findByUsername(username);
+
+        var comment = commentBean.find(commentId);
+        if (comment == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        boolean isOwner = comment.getUser().getUsername().equals(username);
+        boolean isAdmin = user.getRole().toString().equals("Administrador");
+
+        if (!isOwner && !isAdmin) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Não tens permissão para apagar este comentário.").build();
+        }
+
+        commentBean.delete(commentId);
+        return Response.ok().build();
     }
 }
