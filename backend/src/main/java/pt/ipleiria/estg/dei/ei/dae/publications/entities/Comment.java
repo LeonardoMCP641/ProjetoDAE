@@ -41,12 +41,15 @@ public class Comment implements Serializable {
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
+    private boolean visible;
+
     @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
     private List<Comment> replies;
 
     public Comment() {
         this.timestamp = new Date();
         this.replies = new ArrayList<>();
+        this.visible = true;
     }
 
     public Comment(String text, User user, Publication publication, Comment parent) {
@@ -56,6 +59,7 @@ public class Comment implements Serializable {
         this.parent = parent;
         this.timestamp = new Date();
         this.replies = new ArrayList<>();
+        this.visible = true;
     }
 
     // --- GETTERS E SETTERS ---
@@ -80,4 +84,7 @@ public class Comment implements Serializable {
 
     public List<Comment> getReplies() { return replies; }
     public void setReplies(List<Comment> replies) { this.replies = replies; }
+
+    public boolean isVisible() { return visible; }
+    public void setVisible(boolean visible) { this.visible = visible; }
 }

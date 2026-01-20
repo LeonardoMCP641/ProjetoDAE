@@ -65,4 +65,14 @@ public class CommentBean {
     public Comment find(long id) {
         return em.find(Comment.class, id);
     }
+
+    public boolean toggleVisibility(long commentId) {
+        Comment comment = em.find(Comment.class, commentId);
+        if (comment != null) {
+            comment.setVisible(!comment.isVisible());
+            em.merge(comment);
+            return comment.isVisible();
+        }
+        return false;
+    }
 }
