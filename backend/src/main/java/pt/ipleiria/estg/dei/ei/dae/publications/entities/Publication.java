@@ -54,9 +54,6 @@ public class Publication implements Serializable {
     @NotNull
     private User user;
 
-    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PublicationHistory> history = new ArrayList<>();
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "publications_tags",
@@ -113,49 +110,108 @@ public class Publication implements Serializable {
         comment.setPublication(null);
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public List<Tag> getTags() { return tags; }
-    public void setTags(List<Tag> tags) { this.tags = tags; }
-
-    public List<Comment> getComments() { return comments; }
-    public void setComments(List<Comment> comments) { this.comments = comments; }
-
-    public Date getPublicationDate() { return publicationDate; }
-    public void setPublicationDate(Date publicationDate) { this.publicationDate = publicationDate; }
-
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
-
-    public List<String> getAutores() { return autores; }
-    public void setAutores(List<String> autores) { this.autores = autores; }
-
-    public String getArea() { return area; }
-    public void setArea(String area) { this.area = area; }
-
-    public String getTipo() { return tipo; }
-    public void setTipo(String tipo) { this.tipo = tipo; }
-
-    public String getResumoCurto() { return resumoCurto; }
-    public void setResumoCurto(String resumoCurto) { this.resumoCurto = resumoCurto; }
-
-    public String getFilename() { return filename; }
-    public void setFilename(String filename) { this.filename = filename; }
-
-    public String getFilepath() { return filepath; }
-    public void setFilepath(String filepath) { this.filepath = filepath; }
-
-    public boolean isVisivel() { return visivel; }
-    public void setVisivel(boolean visivel) { this.visivel = visivel; }
-
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-
-    public List<PublicationHistory> getHistory() {
-        return history;
+    public Long getId() {
+        return id;
     }
-    public void setHistory(List<PublicationHistory> history) {
-        this.history = history;
+
+    public void setId(Long id) {
+        this.id = id;
     }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Date getPublicationDate() {
+        return publicationDate;
+    }
+
+    public void setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public List<String> getAutores() {
+        return autores;
+    }
+
+    public void setAutores(List<String> autores) {
+        this.autores = autores;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getResumoCurto() {
+        return resumoCurto;
+    }
+
+    public void setResumoCurto(String resumoCurto) {
+        this.resumoCurto = resumoCurto;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getFilepath() {
+        return filepath;
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
+    }
+
+    public boolean isVisivel() {
+        return visivel;
+    }
+
+    public void setVisivel(boolean visivel) {
+        this.visivel = visivel;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 }
