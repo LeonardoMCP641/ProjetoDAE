@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
+import pt.ipleiria.estg.dei.ei.dae.publications.entities.Tag;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.User;
 
 import java.util.List;
@@ -28,15 +29,14 @@ public class PublicationBean {
         p.setFilepath(dto.getFilepath());
         p.setVisivel(dto.isVisivel());
         user=em.merge(user);
-        p.setUser(user); // Agora é o User real passado pelo Service
+        p.setUser(user);
         em.persist(p);
         return p;
     }
 
         /** Listar todas as publicações */
     public List<Publication> listAll() {
-        TypedQuery<Publication> query = em.createQuery("SELECT p FROM Publication p", Publication.class);
-        return query.getResultList();
+        return em.createNamedQuery("getAllPublications", Publication.class).getResultList();
     }
 
     /** Buscar por ID */
@@ -58,10 +58,29 @@ public class PublicationBean {
     }
 
     /** Listar publicações de um user específico */
-    public List<Publication> listByUser(User user) {
-        TypedQuery<Publication> query = em.createQuery(
-                "SELECT p FROM Publication p WHERE p.user = :user", Publication.class);
-        query.setParameter("user", user);
-        return query.getResultList();
+    public List<Publication> listByUser(String username) {
+        return em.createNamedQuery("getPublicationsByUser", Publication.class)
+                .setParameter("username", username)
+                .getResultList();
+    }
+
+    public void associarTag(long publicationId, long tagId) {
+        Publication publication = find(publicationId);
+        Tag tag = em.find(Tag.class, tagId);
+
+        if (publication != null && tag != null) {
+            publication.addTag(tag); // Usa o método auxiliar da Entidade
+            em.merge(publication);   // Grava a alteração
+        }
+    }
+
+    public void desassociarTag(long publicationId, long tagId) {
+        Publication publication = find(publicationId);
+        Tag tag = em.find(Tag.class, tagId);
+
+        if (publication != null && tag != null) {
+            publication.removeTag(tag);
+            em.merge(publication);
+        }
     }
 }

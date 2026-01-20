@@ -4,6 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
+import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Tag;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.User;
 
@@ -46,6 +47,12 @@ public class TagBean {
                 user.removeSubscription(tag);
                 em.merge(user);
             }
+
+            for (Publication pub : tag.getPublications()) {
+                pub.removeTag(tag);
+                em.merge(pub);
+            }
+
             em.remove(tag);
         }
     }
