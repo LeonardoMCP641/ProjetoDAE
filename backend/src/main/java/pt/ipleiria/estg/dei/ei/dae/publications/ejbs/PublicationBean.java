@@ -1,6 +1,7 @@
 package pt.ipleiria.estg.dei.ei.dae.publications.ejbs;
 
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -29,7 +30,7 @@ public class PublicationBean {
         p.setFilepath(dto.getFilepath());
         p.setVisivel(dto.isVisivel());
         user=em.merge(user);
-        p.setUser(user);
+        p.setUser(user); // Agora é o User real passado pelo Service
         em.persist(p);
         return p;
     }
