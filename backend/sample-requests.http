@@ -52,7 +52,7 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxM
 ### Criar uma Nova Publicação
 POST http://localhost:8080/publicacoescientificas/api/publicacoes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0MTIzOCwiZXhwIjoxNzY4OTQ0ODM4fQ.YNy3ERBZbQ713SJ7UaCIiTEUUEq0qaCIhNwhUzE7ab94h1xwuIJixDzYww8VHTI0
 
 {
   "titulo": "Deep Learning para Totós",
@@ -77,7 +77,7 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkzM
 ### Atualizar Publicação 1
 PUT http://localhost:8080/publicacoescientificas/api/publicacoes/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0MTIzOCwiZXhwIjoxNzY4OTQ0ODM4fQ.YNy3ERBZbQ713SJ7UaCIiTEUUEq0qaCIhNwhUzE7ab94h1xwuIJixDzYww8VHTI0
 
 {
   "titulo": "Deep Learning Avançado (Editado)",

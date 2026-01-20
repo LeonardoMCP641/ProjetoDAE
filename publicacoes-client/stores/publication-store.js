@@ -74,4 +74,11 @@ export const usePublicationStore = defineStore("publication", {
       });
     },
   },
+
+  async delete(id, token) {
+    return $fetch(`/publicacoes/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
 });
