@@ -20,12 +20,12 @@ Content-Type: application/json
 ### Listar todas as tags
 GET http://localhost:8080/publicacoescientificas/api/tags
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTkwOSwiZXhwIjoxNzY4OTQ5NTA5fQ.Em47VO8uxONLMq3DJQhdhKLUFlc1iLAzoljVybfyrl_14sBq8WPyeNN4Kd7-rPL5
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### Criar Tag "Java"
 POST http://localhost:8080/publicacoescientificas/api/tags
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 {
   "name": "Java"
@@ -34,7 +34,7 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0N
 ### Criar Tag "Python"
 POST http://localhost:8080/publicacoescientificas/api/tags
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 {
   "name": "Python"
@@ -42,7 +42,7 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0N
 
 ### Apagar uma Tag (Atenção ao ID! Se a BD reiniciou, usa 1 ou 2)
 DELETE http://localhost:8080/publicacoescientificas/api/tags/2
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### ==================================================================================
 ### 3. GESTÃO DE PUBLICAÇÕES 📚
@@ -52,7 +52,7 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0N
 ### Criar uma Nova Publicação
 POST http://localhost:8080/publicacoescientificas/api/publicacoes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NjMwMywiZXhwIjoxNzY4OTQ5OTAzfQ.-pZc_Tz0HDcxtoXH0RJjrpUb7GsHYhpG1wffQ9a02UWUOrq5B0gHCFWVdpTnsndf
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0MTIzOCwiZXhwIjoxNzY4OTQ0ODM4fQ.YNy3ERBZbQ713SJ7UaCIiTEUUEq0qaCIhNwhUzE7ab94h1xwuIJixDzYww8VHTI0
 
 {
   "titulo": "Deep Learning para Totós",
@@ -66,12 +66,12 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0N
 ### Listar TODAS as Publicações
 GET http://localhost:8080/publicacoescientificas/api/publicacoes
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### Ver Detalhes da Publicação 1
 GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### Atualizar Publicação 1
 PUT http://localhost:8080/publicacoescientificas/api/publicacoes/1
@@ -94,15 +94,15 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0M
 ### Associar a Tag 1 (Java) à Publicação 1
 # Confirma se os IDs 1 existem na tua base de dados!
 POST http://localhost:8080/publicacoescientificas/api/publicacoes/1/tags/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### Verificar se ficou colada (Vê a lista "tags" na resposta)
 GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### Desassociar (Remover a etiqueta)
 DELETE http://localhost:8080/publicacoescientificas/api/publicacoes/1/tags/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### ==================================================================================
 ### 5. FICHEIROS (UPLOAD & DOWNLOAD) 📂
@@ -112,7 +112,7 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0N
 # Nota: O IntelliJ HTTP Client precisa que o ficheiro "teste.pdf" exista na pasta do projeto
 # Ou então cria um ficheiro de texto simples para testar.
 POST http://localhost:8080/publicacoescientificas/api/publicacoes/1/upload
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
@@ -124,7 +124,7 @@ Isto é o conteúdo do ficheiro de teste da Matilde.
 
 ### Download do Ficheiro
 GET http://localhost:8080/publicacoescientificas/api/publicacoes/1/download
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### ==================================================================================
 ### 6. TESTAR COMENTÁRIOS E RESPOSTAS 💬
@@ -133,7 +133,7 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0N
 ### 1. Criar um Comentário Normal (Raiz) na Publicação 1
 POST http://localhost:8080/publicacoescientificas/api/publicacoes/1/comentarios
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 {
   "text": "Este artigo está muito interessante! Parabéns."
@@ -142,13 +142,13 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0N
 ### 2. Ver qual é o ID do comentário criado
 # Corre este GET e procura o "id" do comentário que acabaste de criar (vamos imaginar que é o ID 1)
 GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### 3. RESPONDER ao Comentário 1 (Criar um filho)
 # O URL é .../comentarios/ID_DO_PAI/resposta
 POST http://localhost:8080/publicacoescientificas/api/publicacoes/comentarios/1/resposta
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 {
   "text": "Obrigado! Fico contente que tenhas gostado. 😊"
@@ -156,7 +156,7 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0N
 
 ### 4. Ver a "Conversa" toda
 GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NTYyOCwiZXhwIjoxNzY4OTQ5MjI4fQ.Tx7fohfRBkV72AgRhJjbqEU0mEPPwQJKdrH9rYKvZLzHQZ_3ESfIDJk4Y2VILCoa
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### Apagar o comentário 1
 DELETE http://localhost:8080/publicacoescientificas/api/publicacoes/comentarios/1
@@ -166,32 +166,3 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0M
 POST http://localhost:8080/publicacoescientificas/api/publicacoes/comentarios/1/ocultar
 Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0MzgwNiwiZXhwIjoxNzY4OTQ3NDA2fQ.VyrnTaZvjsXjqF1Du_7h26UW8AlmBEY0Y-QpKnoPCCiP5kYI1PnR1zRIgJ7UeO9T
 
-### ==================================================================================
-### 7. TESTAR RATINGS (ESTRELINHAS) ⭐
-### ==================================================================================
-
-### 1. Dar 5 Estrelas à Publicação 1
-POST http://localhost:8080/publicacoescientificas/api/publicacoes/1/rating
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NjMwMywiZXhwIjoxNzY4OTQ5OTAzfQ.-pZc_Tz0HDcxtoXH0RJjrpUb7GsHYhpG1wffQ9a02UWUOrq5B0gHCFWVdpTnsndf
-
-{
-  "value": 5
-}
-
-### 2. Dar 3 Estrelas à Publicação 1 (Simulando outro utilizador ou voto)
-# Nota: O nosso código atual permite que o mesmo user vote várias vezes (cria novo registo)
-# Se quiseres testar médias, corre isto várias vezes com valores diferentes (ex: 1, 3, 5).
-POST http://localhost:8080/publicacoescientificas/api/publicacoes/1/rating
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NjMwMywiZXhwIjoxNzY4OTQ5OTAzfQ.-pZc_Tz0HDcxtoXH0RJjrpUb7GsHYhpG1wffQ9a02UWUOrq5B0gHCFWVdpTnsndf
-
-{
-  "value": 3
-}
-
-### 3. Verificar a Média
-# Corre este GET e procura o campo "ratingAverage".
-# Se deste um 5 e um 3, a média deve ser 4.0! 🧮
-GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NjMwMywiZXhwIjoxNzY4OTQ5OTAzfQ.-pZc_Tz0HDcxtoXH0RJjrpUb7GsHYhpG1wffQ9a02UWUOrq5B0gHCFWVdpTnsndf

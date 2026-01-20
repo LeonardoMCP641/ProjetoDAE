@@ -1,16 +1,15 @@
 package pt.ipleiria.estg.dei.ei.dae.publications.ejbs;
 
-import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.PublicationHistory;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Tag;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.User;
+import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.PublicationHistoryBean;
 
 import java.util.List;
 
@@ -19,6 +18,8 @@ public class PublicationBean {
 
     @PersistenceContext
     private EntityManager em;
+    @Inject
+    private PublicationHistoryBean historyBean;
 
     /** Criar publicação */
     public Publication create(PublicationDTO dto, User user) {
@@ -48,9 +49,69 @@ public class PublicationBean {
     }
 
     /** Atualizar publicação */
-    public Publication update(Publication p) {
+    public Publication update(Publication updatedPublication) {
+        Publication p = find(updatedPublication.getId());
+        if (p == null) {
+            throw new RuntimeException("Publicação não encontrada");
+        }
+
+        // Título
+        if (!p.getTitulo().equals(updatedPublication.getTitulo())) {
+            historyBean.create(new PublicationHistory(p, "titulo", p.getTitulo(), updatedPublication.getTitulo()));
+            p.setTitulo(updatedPublication.getTitulo());
+        }
+
+        // Resumo curto
+        if (!p.getResumoCurto().equals(updatedPublication.getResumoCurto())) {
+            historyBean.create(new PublicationHistory(p, "resumoCurto", p.getResumoCurto(), updatedPublication.getResumoCurto()));
+            p.setResumoCurto(updatedPublication.getResumoCurto());
+        }
+
+        // Área
+        if (!p.getArea().equals(updatedPublication.getArea())) {
+            historyBean.create(new PublicationHistory(p, "area", p.getArea(), updatedPublication.getArea()));
+            p.setArea(updatedPublication.getArea());
+        }
+
+        // Tipo
+        if (!p.getTipo().equals(updatedPublication.getTipo())) {
+            historyBean.create(new PublicationHistory(p, "tipo", p.getTipo(), updatedPublication.getTipo()));
+            p.setTipo(updatedPublication.getTipo());
+        }
+
+        // Visibilidade
+        if (p.isVisivel() != updatedPublication.isVisivel()) {
+            historyBean.create(new PublicationHistory(p, "visivel",
+                    String.valueOf(p.isVisivel()), String.valueOf(updatedPublication.isVisivel())));
+            p.setVisivel(updatedPublication.isVisivel());
+        }
+
+        // Filename
+        if ((p.getFilename() == null && updatedPublication.getFilename() != null) ||
+                (p.getFilename() != null && !p.getFilename().equals(updatedPublication.getFilename()))) {
+            historyBean.create(new PublicationHistory(p, "filename", p.getFilename(), updatedPublication.getFilename()));
+            p.setFilename(updatedPublication.getFilename());
+        }
+
+        // Autores (List<String>)
+        if (!p.getAutores().equals(updatedPublication.getAutores())) {
+            // Converte List<String> para String simples para o histórico
+            String oldAutores = String.join(", ", p.getAutores());
+            String newAutores = String.join(", ", updatedPublication.getAutores());
+            historyBean.create(new PublicationHistory(p, "autores", oldAutores, newAutores));
+            p.setAutores(updatedPublication.getAutores());
+        }
+
+        // Filepath (opcional, se você quiser rastrear)
+        if ((p.getFilepath() == null && updatedPublication.getFilepath() != null) ||
+                (p.getFilepath() != null && !p.getFilepath().equals(updatedPublication.getFilepath()))) {
+            historyBean.create(new PublicationHistory(p, "filepath", p.getFilepath(), updatedPublication.getFilepath()));
+            p.setFilepath(updatedPublication.getFilepath());
+        }
+
         return em.merge(p);
     }
+
 
     /** Apagar publicação */
     public void delete(long id) {
@@ -85,11 +146,5 @@ public class PublicationBean {
             publication.removeTag(tag);
             em.merge(publication);
         }
-    }
-
-
-    public void createHistory(Publication publication, User user, String changes) {
-        PublicationHistory history = new PublicationHistory(publication, user, changes);
-        em.persist(history);
     }
 }
