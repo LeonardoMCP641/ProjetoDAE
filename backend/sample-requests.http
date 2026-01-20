@@ -52,10 +52,10 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxM
 ### Criar uma Nova Publicação
 POST http://localhost:8080/publicacoescientificas/api/publicacoes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0OTY0MSwiZXhwIjoxNzY4OTUzMjQxfQ.rWekJwoerdz1r99bCFVXihxt7QhpHv2_OAk02RxnV0JTGrCTP7-KK7H639Zz5_F3
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0MTIzOCwiZXhwIjoxNzY4OTQ0ODM4fQ.YNy3ERBZbQ713SJ7UaCIiTEUUEq0qaCIhNwhUzE7ab94h1xwuIJixDzYww8VHTI0
 
 {
-  "titulo": "Deep Learning para Totóaaaaaas",
+  "titulo": "Deep Learning para Totós",
   "autores": ["Matilde", "João"],
   "area": "Inteligência Artificial",
   "tipo": "Artigo",
@@ -66,38 +66,30 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0O
 ### Listar TODAS as Publicações
 GET http://localhost:8080/publicacoescientificas/api/publicacoes
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NjM4MiwiZXhwIjoxNzY4OTQ5OTgyfQ.oCCAnevuMMVExn1ycWh9b4Be3q88vXgD7micV7Wrq5z77d9YH6g4VB113r-hJyxR
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### Ver Detalhes da Publicação 1
-GET http://localhost:8080/publicacoescientificas/api/publicacoes/4
+GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NjM4MiwiZXhwIjoxNzY4OTQ5OTgyfQ.oCCAnevuMMVExn1ycWh9b4Be3q88vXgD7micV7Wrq5z77d9YH6g4VB113r-hJyxR
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
 ### Atualizar Publicação 1
-PUT http://localhost:8080/publicacoescientificas/api/publicacoes/2
+PUT http://localhost:8080/publicacoescientificas/api/publicacoes/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0OTY0MSwiZXhwIjoxNzY4OTUzMjQxfQ.rWekJwoerdz1r99bCFVXihxt7QhpHv2_OAk02RxnV0JTGrCTP7-KK7H639Zz5_F3
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0MTIzOCwiZXhwIjoxNzY4OTQ0ODM4fQ.YNy3ERBZbQ713SJ7UaCIiTEUUEq0qaCIhNwhUzE7ab94h1xwuIJixDzYww8VHTI0
 
 {
-  "titulo": "Deep aLearning Avançadasao (Editado)",
-  "autores": ["Matialde", "João", "Ana"],
-  "area": "Inteliagência Artificial",
-  "tipo": "Artigoaaaaaaaasasaaaaaaaaaaa",
-  "resumoCurto": "Versão atualizadaaaaa.",
-  "filepath": "/path/to/file.pdf",
-  "filename": "file.pdf",
-  "visivel": false
+  "titulo": "Deep Learning Avançado (Editado)",
+  "autores": ["Matilde", "João", "Ana"],
+  "area": "Inteligência Artificial",
+  "tipo": "Artigo",
+  "resumoCurto": "Versão atualizada.",
+  "visivel": true
 }
 
 ### ==================================================================================
 ### 4. ASSOCIAÇÃO (COLAR ETIQUETAS) 🔗
 ### ==================================================================================
-GET http://localhost:8080/publicacoescientificas/api/publicacoes/4/historico
-Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0NjM4MiwiZXhwIjoxNzY4OTQ5OTgyfQ.oCCAnevuMMVExn1ycWh9b4Be3q88vXgD7micV7Wrq5z77d9YH6g4VB113r-hJyxR
-
-
-
 
 ### Associar a Tag 1 (Java) à Publicação 1
 # Confirma se os IDs 1 existem na tua base de dados!
@@ -174,16 +166,3 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0M
 POST http://localhost:8080/publicacoescientificas/api/publicacoes/comentarios/1/ocultar
 Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0MzgwNiwiZXhwIjoxNzY4OTQ3NDA2fQ.VyrnTaZvjsXjqF1Du_7h26UW8AlmBEY0Y-QpKnoPCCiP5kYI1PnR1zRIgJ7UeO9T
 
-
-
-
-
-###7. VER HISTÓRICO DE ALTERAÇÕES DE UMA PUBLICAÇÃO 🕒
-GET http://localhost:8080/publicacoescientificas/api/publicacoes/2/historico
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0OTY0MSwiZXhwIjoxNzY4OTUzMjQxfQ.rWekJwoerdz1r99bCFVXihxt7QhpHv2_OAk02RxnV0JTGrCTP7-KK7H639Zz5_F3
-
-###asa
-GET http://localhost:8080/publicacoescientificas/api/publicacoes/historico
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0OTY0MSwiZXhwIjoxNzY4OTUzMjQxfQ.rWekJwoerdz1r99bCFVXihxt7QhpHv2_OAk02RxnV0JTGrCTP7-KK7H639Zz5_F3

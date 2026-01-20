@@ -10,6 +10,7 @@ import pt.ipleiria.estg.dei.ei.dae.publications.dtos.CommentDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.CommentBean;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.PublicationBean;
+import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.RatingBean;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.UserBean;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.User;
@@ -37,6 +38,9 @@ public class PublicationService {
 
     @EJB
     private UserBean userBean;
+
+    @EJB
+    private RatingBean ratingBean;
 
     @Context
     private SecurityContext securityContext;
@@ -229,6 +233,17 @@ public class PublicationService {
         }
 
         commentBean.delete(commentId);
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("{id}/rating")
+    @Authenticated
+    public Response ratePublication(@PathParam("id") long publicationId, pt.ipleiria.estg.dei.ei.dae.publications.dtos.RatingDTO dto) {
+        String username = securityContext.getUserPrincipal().getName();
+
+        ratingBean.rate(publicationId, username, dto.getValue());
+
         return Response.ok().build();
     }
 }

@@ -54,6 +54,14 @@ public class Publication implements Serializable {
     @NotNull
     private User user;
 
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PublicationHistory> history = new ArrayList<>();
+
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Rating> ratings;
+
+    private double ratingAverage;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "publications_tags",
@@ -69,7 +77,9 @@ public class Publication implements Serializable {
         this.tags = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.autores = new ArrayList<>();
-        this.publicationDate = new Date(); // Data de agora
+        this.publicationDate = new Date();
+        this.ratings = new ArrayList<>();
+        this.ratingAverage = 0.0;
     }
 
     public Publication(String titulo, List<String> autores, String area, String tipo,
@@ -87,6 +97,8 @@ public class Publication implements Serializable {
         this.tags = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.publicationDate = new Date();
+        this.ratings = new ArrayList<>();
+        this.ratingAverage = 0.0;
     }
 
 
@@ -110,108 +122,71 @@ public class Publication implements Serializable {
         comment.setPublication(null);
     }
 
-    public Long getId() {
-        return id;
+    public void addRating(Rating rating) {
+        ratings.add(rating);
+        recalculateAverage();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    private void recalculateAverage() {
+        if (ratings.isEmpty()) {
+            ratingAverage = 0.0;
+            return;
+        }
+        double sum = 0;
+        for (Rating r : ratings) {
+            sum += r.getValue();
+        }
+        this.ratingAverage = sum / ratings.size();
     }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public List<Tag> getTags() {
-        return tags;
+    public List<Tag> getTags() { return tags; }
+    public void setTags(List<Tag> tags) { this.tags = tags; }
+
+    public List<Comment> getComments() { return comments; }
+    public void setComments(List<Comment> comments) { this.comments = comments; }
+
+    public Date getPublicationDate() { return publicationDate; }
+    public void setPublicationDate(Date publicationDate) { this.publicationDate = publicationDate; }
+
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
+
+    public List<String> getAutores() { return autores; }
+    public void setAutores(List<String> autores) { this.autores = autores; }
+
+    public String getArea() { return area; }
+    public void setArea(String area) { this.area = area; }
+
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
+
+    public String getResumoCurto() { return resumoCurto; }
+    public void setResumoCurto(String resumoCurto) { this.resumoCurto = resumoCurto; }
+
+    public String getFilename() { return filename; }
+    public void setFilename(String filename) { this.filename = filename; }
+
+    public String getFilepath() { return filepath; }
+    public void setFilepath(String filepath) { this.filepath = filepath; }
+
+    public boolean isVisivel() { return visivel; }
+    public void setVisivel(boolean visivel) { this.visivel = visivel; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
+    public List<Rating> getRatings() { return ratings; }
+    public void setRatings(List<Rating> ratings) { this.ratings = ratings; }
+
+    public double getRatingAverage() { return ratingAverage; }
+    public void setRatingAverage(double ratingAverage) { this.ratingAverage = ratingAverage; }
+
+    public List<PublicationHistory> getHistory() {
+        return history;
     }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
+    public void setHistory(List<PublicationHistory> history) {
+        this.history = history;
     }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public Date getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(Date publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public List<String> getAutores() {
-        return autores;
-    }
-
-    public void setAutores(List<String> autores) {
-        this.autores = autores;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getResumoCurto() {
-        return resumoCurto;
-    }
-
-    public void setResumoCurto(String resumoCurto) {
-        this.resumoCurto = resumoCurto;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public String getFilepath() {
-        return filepath;
-    }
-
-    public void setFilepath(String filepath) {
-        this.filepath = filepath;
-    }
-
-    public boolean isVisivel() {
-        return visivel;
-    }
-
-    public void setVisivel(boolean visivel) {
-        this.visivel = visivel;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
 }
