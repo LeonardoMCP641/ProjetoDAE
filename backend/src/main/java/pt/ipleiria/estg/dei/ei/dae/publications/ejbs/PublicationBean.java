@@ -5,8 +5,6 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import pt.ipleiria.estg.dei.ei.dae.publications.ai.LlmSummaryService;
-import pt.ipleiria.estg.dei.ei.dae.publications.ai.PdfTextExtractor;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Tag;
