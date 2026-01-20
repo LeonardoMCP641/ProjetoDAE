@@ -57,6 +57,11 @@ public class Publication implements Serializable {
     @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PublicationHistory> history = new ArrayList<>();
 
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Rating> ratings;
+
+    private double ratingAverage;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "publications_tags",
@@ -72,7 +77,9 @@ public class Publication implements Serializable {
         this.tags = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.autores = new ArrayList<>();
-        this.publicationDate = new Date(); // Data de agora
+        this.publicationDate = new Date();
+        this.ratings = new ArrayList<>();
+        this.ratingAverage = 0.0;
     }
 
     public Publication(String titulo, List<String> autores, String area, String tipo,
@@ -90,6 +97,8 @@ public class Publication implements Serializable {
         this.tags = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.publicationDate = new Date();
+        this.ratings = new ArrayList<>();
+        this.ratingAverage = 0.0;
     }
 
 
@@ -113,6 +122,22 @@ public class Publication implements Serializable {
         comment.setPublication(null);
     }
 
+    public void addRating(Rating rating) {
+        ratings.add(rating);
+        recalculateAverage();
+    }
+
+    private void recalculateAverage() {
+        if (ratings.isEmpty()) {
+            ratingAverage = 0.0;
+            return;
+        }
+        double sum = 0;
+        for (Rating r : ratings) {
+            sum += r.getValue();
+        }
+        this.ratingAverage = sum / ratings.size();
+    }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -151,6 +176,12 @@ public class Publication implements Serializable {
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+
+    public List<Rating> getRatings() { return ratings; }
+    public void setRatings(List<Rating> ratings) { this.ratings = ratings; }
+
+    public double getRatingAverage() { return ratingAverage; }
+    public void setRatingAverage(double ratingAverage) { this.ratingAverage = ratingAverage; }
 
     public List<PublicationHistory> getHistory() {
         return history;
