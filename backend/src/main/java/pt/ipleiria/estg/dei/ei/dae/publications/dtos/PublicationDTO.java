@@ -19,6 +19,9 @@ public class PublicationDTO {
     private String username;
 
     private List<TagDTO> tags = new ArrayList<>();
+
+    private List<CommentDTO> comments = new ArrayList<>();
+
     public PublicationDTO() {}
 
     public PublicationDTO(Publication p) {
@@ -33,6 +36,7 @@ public class PublicationDTO {
         this.visivel = p.isVisivel();
         this.username = p.getUser() != null ? p.getUser().getUsername() : null;
         this.tags = TagDTO.from(p.getTags());
+        this.comments = CommentDTO.from(p.getComments());
     }
 
     public static List<PublicationDTO> from(List<Publication> publications) {
@@ -123,4 +127,7 @@ public class PublicationDTO {
 
     public void setTags(List<TagDTO> tags) { this.tags = tags; }
 
+    public List<CommentDTO> getComments() { return comments; }
+
+    public void setComments(List<CommentDTO> comments) { this.comments = comments; }
 }
