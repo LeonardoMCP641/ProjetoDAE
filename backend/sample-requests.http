@@ -1,109 +1,127 @@
+### ==================================================================================
+### 1. AUTENTICAÇÃO (OBRIGATÓRIO PARA COMEÇAR) 🔐
+### ==================================================================================
+
+### Login (Para receber o Token)
 POST http://localhost:8080/publicacoescientificas/api/auth/login
 Content-Type: application/json
-Accept: application/json
 
 {
   "username": "admin",
   "password": "123"
 }
 
-### Get All Students
-GET http://localhost:8080/academics/api/students
+### ⚠️ COPIA O TOKEN DA RESPOSTA E SUBSTITUI EM BAIXO! ⚠️
+
+### ==================================================================================
+### 2. GESTÃO DE TAGS 🏷️
+### ==================================================================================
+
+### Listar todas as tags
+GET http://localhost:8080/publicacoescientificas/api/tags
 Accept: application/json
-### Create A New Student
-POST http://localhost:8080/academics/api/students
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
+
+### Criar Tag "Java"
+POST http://localhost:8080/publicacoescientificas/api/tags
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
 
 {
- "email": "johndoe@mail.com",
- "name": "John Doe",
- "username": "john",
- "password": "jd",
- "courseCode": 1
+  "name": "Java"
 }
 
-### Get All Courses
-GET http://localhost:8080/academics/api/courses
-Accept: application/json
-
-### Create A New Course
-POST http://localhost:8080/academics/api/courses
+### Criar Tag "Python"
+POST http://localhost:8080/publicacoescientificas/api/tags
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
 
 {
-  "code": 4,
-  "name": "Gestão"
+  "name": "Python"
 }
 
-### Get Student "bruno"
-GET http://localhost:8080/academics/api/students/bruno
-Accept: application/json
+### Apagar uma Tag (Atenção ao ID! Se a BD reiniciou, usa 1 ou 2)
+DELETE http://localhost:8080/publicacoescientificas/api/tags/2
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
 
-### Get Student "bruno" subjects
-GET http://localhost:8080/academics/api/students/bruno/subjects
-Accept: application/json
+### ==================================================================================
+### 3. GESTÃO DE PUBLICAÇÕES 📚
+### (Nota: O URL mudou de 'publications' para 'publicacoes')
+### ==================================================================================
 
-
-### REQUEST JWT TOKEN
-POST http://localhost:8080/academics/api/auth/login
+### Criar uma Nova Publicação
+POST http://localhost:8080/publicacoescientificas/api/publicacoes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
+
+{
+  "titulo": "Deep Learning para Totós",
+  "autores": ["Matilde", "João"],
+  "area": "Inteligência Artificial",
+  "tipo": "Artigo",
+  "resumoCurto": "Um guia muito simples.",
+  "visivel": true
+}
+
+### Listar TODAS as Publicações
+GET http://localhost:8080/publicacoescientificas/api/publicacoes
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
 
-{ "username": "miguel", "password": "password" }
-
-### GET ALL STUDENTS
-GET http://localhost:8080/academics/api/students
+### Ver Detalhes da Publicação 1
+GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJtaWd1ZWwiLCJpYXQiOjE3NjcxOTcwNzMsImV4cCI6MTc2NzIwMDY3M30.HA2pzU8y1qLDruZgjx7D3ZccqQjCdFhtI1AOoF0oz7yl8q9LbLxGnxR3urMPD5mt
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
 
+### Atualizar Publicação 1
+PUT http://localhost:8080/publicacoescientificas/api/publicacoes/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
 
-### Upload document
-POST http://localhost:8080/academics/api/documents/upload HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ3aWxsIiwiaWF0IjoxNzY3MTQwNzc3LCJleHAiOjE3NjcxNDQzNzd9.yXMMBMvKDM2K4J3IFDQhiB_mEc0a6Lz7vQGPj4rGy_KRGIfpWf8GukRGYDq2PIp4
+{
+  "titulo": "Deep Learning Avançado (Editado)",
+  "autores": ["Matilde", "João", "Ana"],
+  "area": "Inteligência Artificial",
+  "tipo": "Artigo",
+  "resumoCurto": "Versão atualizada.",
+  "visivel": true
+}
+
+### ==================================================================================
+### 4. ASSOCIAÇÃO (COLAR ETIQUETAS) 🔗
+### ==================================================================================
+
+### Associar a Tag 1 (Java) à Publicação 1
+# Confirma se os IDs 1 existem na tua base de dados!
+POST http://localhost:8080/publicacoescientificas/api/publicacoes/1/tags/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
+
+### Verificar se ficou colada (Vê a lista "tags" na resposta)
+GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
+
+### Desassociar (Remover a etiqueta)
+DELETE http://localhost:8080/publicacoescientificas/api/publicacoes/1/tags/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
+
+### ==================================================================================
+### 5. FICHEIROS (UPLOAD & DOWNLOAD) 📂
+### ==================================================================================
+
+### Upload de Ficheiro (Simulação)
+# Nota: O IntelliJ HTTP Client precisa que o ficheiro "teste.pdf" exista na pasta do projeto
+# Ou então cria um ficheiro de texto simples para testar.
+POST http://localhost:8080/publicacoescientificas/api/publicacoes/1/upload
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="file1.txt"
+Content-Disposition: form-data; name="file"; filename="meu_artigo.txt"
 Content-Type: text/plain
 
-contents of the file
+Isto é o conteúdo do ficheiro de teste da Matilde.
 --boundary--
 
-### Download document
-GET http://localhost:8080/academics/api/documents/download/1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ3aWxsIiwiaWF0IjoxNzY3MTQwNzc3LCJleHAiOjE3NjcxNDQzNzd9.yXMMBMvKDM2K4J3IFDQhiB_mEc0a6Lz7vQGPj4rGy_KRGIfpWf8GukRGYDq2PIp4
-
-### EP10: Listar todas as tags (Vai dar lista vazia [] no início)
-GET http://localhost:8080/publicacoescientificas/api/tags
-Accept: application/json
-
-### EP12: Criar uma Tag nova
-POST http://localhost:8080/publicacoescientificas/api/tags
-Content-Type: application/json
-
-{
-  "name": "ProjetoX"
-}
-
-### EP12: Criar outra Tag
-POST http://localhost:8080/publicacoescientificas/api/tags
-Content-Type: application/json
-
-{
-  "name": "InteligenciaArtificial"
-}
-
-### EP11: Ver detalhes da tag 1 (A do ProjetoX)
-GET http://localhost:8080/publicacoescientificas/api/tags/1
-Accept: application/json
-
-### EP13: Mudar o nome da tag 1 para "ProjetoFinal"
-PUT http://localhost:8080/publicacoescientificas/api/tags/1
-Content-Type: application/json
-
-{
-  "name": "ProjetoFinal"
-}
-
-### EP14: Apagar a tag 2 (InteligenciaArtificial)
-DELETE http://localhost:8080/publicacoescientificas/api/tags/2
+### Download do Ficheiro
+GET http://localhost:8080/publicacoescientificas/api/publicacoes/1/download
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMTI4NCwiZXhwIjoxNzY4OTE0ODg0fQ._dKODDR4cM7qCNhmUGeDWcd8w07_n0WaOJm1uIiopbIp2vFOVObwFjvGV6chA110

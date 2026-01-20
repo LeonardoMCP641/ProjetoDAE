@@ -93,12 +93,22 @@ public class UserBean {
     }
 
     // RECOVER PASSWORD
-    public void recoverPassword(String email) {
+    public void resetPassword(String email, String newPassword) {
         User user = findByEmail(email);
         if (user != null) {
-            String newPass = java.util.UUID.randomUUID().toString().substring(0,8);
-            user.setPassword(Hasher.hash(newPass));
-            //emailBean.send(user.getEmail(), "Nova Password", "Sua password: " + newPass);
+            // Importante: Encripta a password antes de guardar (ex: hash)
+            // Se estiveres a usar o que aprendeste na aula:
+            user.setPassword(Hasher.hash(newPassword));
+            entityManager.merge(user);
         }
+    }
+
+    public boolean remove(long id) {
+        User user = find(id);
+        if (user == null) {
+            return false;
+        }
+        entityManager.remove(user);
+        return true;
     }
 }

@@ -9,62 +9,60 @@ import java.util.Date;
 @Table(name = "comments")
 @NamedQueries({
         @NamedQuery(
-                name = "getCommentsByPublication",
-                query = "SELECT c FROM Comment c WHERE c.publication.id = :pubId AND c.visible = true ORDER BY c.creationDate DESC"
-        ),
-        @NamedQuery(
-                name = "getHiddenComments",
-                query = "SELECT c FROM Comment c WHERE c.visible = false"
+                name = "getAllComments",
+                query = "SELECT c FROM Comment c ORDER BY c.timestamp DESC"
         )
 })
 public class Comment implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotNull
     private String text;
 
-    @NotNull
-    private String author;
-
-    private boolean visible;
-
     @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate;
+    private Date timestamp;
 
+    // --- RELAÇÃO COM USER (Quem escreveu) ---
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @NotNull
+    private User user;
+
+    // --- RELAÇÃO COM PUBLICATION (Onde foi escrito) ---
     @ManyToOne
     @JoinColumn(name = "publication_id")
     @NotNull
-    private Publication publication;
+    private Publication publication; // <--- O culpado! Precisamos disto aqui.
 
     public Comment() {
+        this.timestamp = new Date();
     }
 
-    public Comment(String text, String author, Publication publication) {
+    public Comment(String text, User user, Publication publication) {
         this.text = text;
-        this.author = author;
+        this.user = user;
         this.publication = publication;
-        this.visible = true; // Por defeito, o comentário nasce visível
-        this.creationDate = new Date(); // Guarda a data/hora de agora
+        this.timestamp = new Date();
     }
 
-    public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
+    // --- GETTERS E SETTERS ---
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getText() { return text; }
     public void setText(String text) { this.text = text; }
 
-    public String getAuthor() { return author; }
-    public void setAuthor(String author) { this.author = author; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-    public boolean isVisible() { return visible; }
-    public void setVisible(boolean visible) { this.visible = visible; }
-
-    public Date getCreationDate() { return creationDate; }
-    public void setCreationDate(Date creationDate) { this.creationDate = creationDate; }
-
+    // 👇 AQUI ESTÁ O MÉTODO QUE O ERRO PEDIA! 👇
     public Publication getPublication() { return publication; }
     public void setPublication(Publication publication) { this.publication = publication; }
+
+    public Date getTimestamp() { return timestamp; }
+    public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
 }

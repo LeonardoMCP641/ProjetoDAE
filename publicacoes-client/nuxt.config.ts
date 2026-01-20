@@ -2,7 +2,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   // 1. Módulos
-  modules: ['@pinia/nuxt'],
+  modules: ['@pinia/nuxt','@nuxtjs/tailwindcss'],
 
   // 2. CSS Framework (Bootstrap 5 via CDN)
   app: {
