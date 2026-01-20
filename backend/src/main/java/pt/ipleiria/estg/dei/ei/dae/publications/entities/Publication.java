@@ -54,6 +54,9 @@ public class Publication implements Serializable {
     @NotNull
     private User user;
 
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PublicationHistory> history = new ArrayList<>();
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "publications_tags",
@@ -148,4 +151,11 @@ public class Publication implements Serializable {
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+
+    public List<PublicationHistory> getHistory() {
+        return history;
+    }
+    public void setHistory(List<PublicationHistory> history) {
+        this.history = history;
+    }
 }

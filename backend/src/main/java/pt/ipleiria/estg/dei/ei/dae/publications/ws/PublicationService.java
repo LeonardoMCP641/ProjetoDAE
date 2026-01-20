@@ -83,16 +83,36 @@ public class PublicationService {
         Publication p = publicationBean.find(id);
         if (p == null) return Response.status(Response.Status.NOT_FOUND).build();
 
-        p.setTitulo(dto.getTitulo());
-        p.setAutores(dto.getAutores());
-        p.setArea(dto.getArea());
-        p.setTipo(dto.getTipo());
-        p.setResumoCurto(dto.getResumoCurto());
+        String username = securityContext.getUserPrincipal().getName();
+        User editor = userBean.findByUsername(username);
+        if (editor == null) return Response.status(Response.Status.UNAUTHORIZED).build();
+
+        boolean isOwner = p.getUser().getUsername().equals(username);
+
+        // Criar histórico apenas se houver alterações
+        if (isOwner) {
+            String changes = "Título: '" + p.getTitulo() + "' -> '" + dto.getTitulo() + "', " +
+                    "Resumo: '" + p.getResumoCurto() + "' -> '" + dto.getResumoCurto() + "'";
+            publicationBean.createHistory(p, editor, changes);
+        }
+
+        // Atualizar campos apenas se for dono
+        if (isOwner) {
+            p.setTitulo(dto.getTitulo());
+            p.setAutores(dto.getAutores());
+            p.setArea(dto.getArea());
+            p.setTipo(dto.getTipo());
+            p.setResumoCurto(dto.getResumoCurto());
+        }
+
+        // Todos podem alterar visibilidade
         p.setVisivel(dto.isVisivel());
 
         publicationBean.update(p);
+
         return Response.ok(new PublicationDTO(p)).build();
     }
+
 
     /** Apagar publicação */
     @DELETE

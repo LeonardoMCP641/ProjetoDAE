@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.publications.ejbs;
 
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -7,6 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
+import pt.ipleiria.estg.dei.ei.dae.publications.entities.PublicationHistory;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Tag;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.User;
 
@@ -83,5 +85,11 @@ public class PublicationBean {
             publication.removeTag(tag);
             em.merge(publication);
         }
+    }
+
+
+    public void createHistory(Publication publication, User user, String changes) {
+        PublicationHistory history = new PublicationHistory(publication, user, changes);
+        em.persist(history);
     }
 }
