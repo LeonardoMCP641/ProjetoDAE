@@ -81,6 +81,7 @@ public class TagService {
 
     @POST
     @Path("{id}/subscricao")
+    @Authenticated
     public Response subscribeTag(@PathParam("id") long tagId) {
         String username = securityContext.getUserPrincipal().getName();
         var user = userBean.findByUsername(username);
@@ -93,6 +94,7 @@ public class TagService {
 
     @DELETE
     @Path("{id}/subscricao")
+    @Authenticated
     public Response unsubscribeTag(@PathParam("id") long tagId) {
         String username = securityContext.getUserPrincipal().getName();
         var user = userBean.findByUsername(username);

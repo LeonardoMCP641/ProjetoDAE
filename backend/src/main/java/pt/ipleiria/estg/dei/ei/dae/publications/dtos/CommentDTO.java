@@ -11,16 +11,18 @@ public class CommentDTO implements Serializable {
     private String username;
     private String timestamp;
     private Long parentId;
+    private boolean visible;
 
     public CommentDTO() {
     }
 
-    public CommentDTO(Long id, String text, String username, String timestamp, Long parentId) {
+    public CommentDTO(Long id, String text, String username, String timestamp, Long parentId, boolean visible) {
         this.id = id;
         this.text = text;
         this.username = username;
         this.timestamp = timestamp;
         this.parentId = parentId;
+        this.visible = visible;
     }
 
     public static CommentDTO from(Comment comment) {
@@ -29,7 +31,8 @@ public class CommentDTO implements Serializable {
                 comment.getText(),
                 comment.getUser().getUsername(),
                 comment.getTimestamp().toString(),
-                comment.getParent() != null ? comment.getParent().getId() : null
+                comment.getParent() != null ? comment.getParent().getId() : null,
+                comment.isVisible()
         );
     }
 
@@ -57,4 +60,7 @@ public class CommentDTO implements Serializable {
 
     public void setParentId(Long parentId) { this.parentId = parentId; }
 
+    public boolean isVisible() { return visible; }
+
+    public void setVisible(boolean visible) { this.visible = visible; }
 }
