@@ -7,9 +7,10 @@ export const usePublicationStore = defineStore("publication", {
   }),
 
   actions: {
-    async fetchAll(token) {
+    async fetchAll(token, params = {}) {
       const config = useRuntimeConfig();
-      this.publications = await $fetch(`${config.public.apiBase}/publicacoes`, {
+      const query = new URLSearchParams(params).toString();
+      this.publications = await $fetch(`${config.public.apiBase}/publicacoes?${query}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
