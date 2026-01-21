@@ -207,7 +207,7 @@ public class PublicationService {
         }
         return PublicationDTO.from(publicationBean.listAll());
     }
-}
+
 
     @POST
     @Authenticated
