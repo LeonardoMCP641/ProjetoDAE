@@ -2,6 +2,7 @@ package pt.ipleiria.estg.dei.ei.dae.publications.dtos;
 
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,12 @@ public class PublicationDTO {
     private String filepath;
     private boolean visivel;
     private String username;
+    private double ratingAverage;
+    private int ratingCount;
+
+    private List<TagDTO> tags = new ArrayList<>();
+
+    private List<CommentDTO> comments = new ArrayList<>();
 
     public PublicationDTO() {}
 
@@ -30,6 +37,10 @@ public class PublicationDTO {
         this.filepath = p.getFilepath();
         this.visivel = p.isVisivel();
         this.username = p.getUser() != null ? p.getUser().getUsername() : null;
+        this.tags = TagDTO.from(p.getTags());
+        this.comments = CommentDTO.from(p.getComments());
+        this.ratingAverage = p.getRatingAverage();
+        this.ratingCount = p.getRatings().size();
     }
 
     public static List<PublicationDTO> from(List<Publication> publications) {
@@ -116,4 +127,19 @@ public class PublicationDTO {
         this.visivel = visivel;
     }
 
+    public List<TagDTO> getTags() { return tags; }
+
+    public void setTags(List<TagDTO> tags) { this.tags = tags; }
+
+    public List<CommentDTO> getComments() { return comments; }
+
+    public void setComments(List<CommentDTO> comments) { this.comments = comments; }
+
+    public double getRatingAverage() { return ratingAverage; }
+
+    public void setRatingAverage(double ratingAverage) { this.ratingAverage = ratingAverage; }
+
+    public int getRatingCount() { return ratingCount; }
+
+    public void setRatingCount(int ratingCount) { this.ratingCount = ratingCount; }
 }
