@@ -51,6 +51,11 @@
 </template>
 
 <script setup>
+
+definePageMeta({
+  middleware: ['role'],
+  requiredRoles: ['Administrador', 'Responsavel'],
+})
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from "~/stores/auth-store.js";
