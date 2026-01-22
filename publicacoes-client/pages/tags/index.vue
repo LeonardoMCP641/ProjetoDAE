@@ -119,11 +119,6 @@
 </template>
 
 <script setup>
-
-definePageMeta({
-  middleware: ['role'],
-  requiredRoles: ['Administrador', 'Responsavel'],
-})
 import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from "~/stores/auth-store.js";
 import { storeToRefs } from "pinia";

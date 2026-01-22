@@ -111,10 +111,6 @@
 
 <script setup>
 
-definePageMeta({
-  middleware: ['role'],
-  requiredRoles: ['Administrador', 'Responsavel'],
-})
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from "~/stores/auth-store.js";
@@ -160,7 +156,6 @@ async function fetchTagDetails() {
   async function fetchPublicationsByTag() {
     loadingPubs.value = true;
     try {
-      // Chamamos o motor de busca do Java com a tag e a ordenação escolhida
       const data = await $fetch(`${api}/publicacoes/pesquisa`, {
         headers: { Authorization: `Bearer ${token.value}` },
         params: {
@@ -169,7 +164,6 @@ async function fetchTagDetails() {
         }
       });
 
-      // Filtramos apenas para garantir que estamos na tag certa, mas sem mudar a ordem!
       publications.value = data.filter(p =>
           p.visivel && p.tags && p.tags.some(t => t.toLowerCase() === tagName.toLowerCase())
       );
