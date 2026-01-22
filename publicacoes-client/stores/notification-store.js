@@ -1,12 +1,9 @@
 import { defineStore } from "pinia";
 
 export const useNotificationStore = defineStore("notification", {
-    state: () => ({
-        notifications: [],
-    }),
+    state: () => ({ notifications: [] }),
     getters: {
-        // Conta quantas notificações não foram lidas
-        unreadCount: (state) => state.notifications.filter((n) => !n.read).length,
+        unreadCount: (state) => state.notifications.length,
     },
     actions: {
         async fetchNotifications(token) {
@@ -17,7 +14,7 @@ export const useNotificationStore = defineStore("notification", {
                 });
                 this.notifications = data;
             } catch (e) {
-                console.error("Erro ao buscar notificações", e);
+                console.error("Erro notifications", e);
             }
         },
     },

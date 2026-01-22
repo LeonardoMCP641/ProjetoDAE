@@ -23,8 +23,6 @@
             </div>
           </div>
 
-          <div class="flex-1"></div>
-
           <div class="hidden md:flex items-center space-x-4">
             <template v-if="token">
 
@@ -99,15 +97,9 @@
         <div class="px-2 pt-2 pb-3 space-y-1">
           <NuxtLink to="/" class="mobile-nav-link">Início</NuxtLink>
           <template v-if="token">
-
             <NuxtLink to="/tags" class="mobile-nav-link">Gestão Tags</NuxtLink>
             <NuxtLink v-if="user?.role === 'Administrador'" to="/users" class="mobile-nav-link">Gestão Users</NuxtLink>
             <NuxtLink to="/users/profile" class="mobile-nav-link text-blue-200">O Meu Perfil</NuxtLink>
-
-            <div class="px-3 py-2 text-blue-200" v-if="notifStore.unreadCount > 0">
-              Você tem {{ notifStore.unreadCount }} novas notificações.
-            </div>
-
             <button @click="handleLogout" class="block w-full text-left px-3 py-2 text-red-300 font-medium italic">Sair</button>
           </template>
           <NuxtLink v-else to="/auth/login" class="mobile-nav-link font-bold">Login</NuxtLink>
@@ -150,21 +142,18 @@ function handleLogout() {
   router.push('/auth/login');
 }
 
-// Carregar notificações
 onMounted(() => {
   if (token.value) {
     notifStore.fetchNotifications(token.value);
   }
 });
 
-// Watch token para carregar notificações ao fazer login
 watch(() => token.value, (newToken) => {
   if (newToken) {
     notifStore.fetchNotifications(newToken);
   }
 });
 
-// Fechar menus ao mudar de rota
 watch(() => router.currentRoute.value.fullPath, () => {
   isMobileMenuOpen.value = false;
   isUserMenuOpen.value = false;
@@ -176,12 +165,9 @@ watch(() => router.currentRoute.value.fullPath, () => {
 .nav-link {
   @apply text-blue-100 hover:text-white hover:bg-blue-600 px-3 py-2 rounded-md text-sm font-medium transition;
 }
-
-/* Estilo para NuxtLink ativo */
 .router-link-active {
   @apply bg-blue-800 text-white font-bold;
 }
-
 .mobile-nav-link {
   @apply block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-700 transition;
 }

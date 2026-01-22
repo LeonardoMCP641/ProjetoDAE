@@ -7,15 +7,17 @@ export const usePublicationStore = defineStore("publication", {
   }),
 
   actions: {
-    async fetchAll(token, params = {}) {
-      const config = useRuntimeConfig();
-      const query = new URLSearchParams(params).toString();
-      this.publications = await $fetch(`${config.public.apiBase}/publicacoes?${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    },
+      async fetchAll(token, params = {}) { // Adicionado params
+          const config = useRuntimeConfig();
+          // Converter objeto params para query string
+          const query = new URLSearchParams(params).toString();
+
+          this.publications = await $fetch(`${config.public.apiBase}/publicacoes?${query}`, {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+              },
+          });
+      },
 
     async create(data, token) {
       const config = useRuntimeConfig();
