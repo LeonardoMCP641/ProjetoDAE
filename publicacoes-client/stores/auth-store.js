@@ -1,38 +1,34 @@
 import { defineStore } from "pinia";
 
 export const useAuthStore = defineStore("authStore", () => {
-
     const token = ref(null);
     const user = ref(null);
+    const ready = ref(false);
+
     const config = useRuntimeConfig();
     const api = config.public.apiBase;
 
-    // Actions tornam-se funções normais
     async function login(username, password) {
-        try {
-            const data = await $fetch(`${api}/auth/login`, {
-                method: 'POST',
-                body: { username, password }
-            });
+        const data = await $fetch(`${api}/auth/login`, {
+            method: "POST",
+            body: { username, password },
+        });
 
-            token.value = data.token;
+        token.value = data.token;
 
-            if (process.client) {
-                localStorage.setItem('token', token.value);
-            }
-
-            await fetchUser();
-            return navigateTo('/');
-        } catch (error) {
-            throw error;
+        if (process.client) {
+            localStorage.setItem("token", token.value);
         }
+
+        await fetchUser();
+        return navigateTo("/");
     }
 
     async function fetchUser() {
         if (!token.value) return;
         try {
             const userData = await $fetch(`${api}/auth/user`, {
-                headers: { Authorization: `Bearer ${token.value}` }
+                headers: { Authorization: `Bearer ${token.value}` },
             });
             user.value = userData;
         } catch (e) {
@@ -44,25 +40,28 @@ export const useAuthStore = defineStore("authStore", () => {
         token.value = null;
         user.value = null;
         if (process.client) {
-            localStorage.removeItem('token');
+            localStorage.removeItem("token");
         }
-        navigateTo('/auth/login');
+        navigateTo("/auth/login");
     }
 
-    // getters (computeds)
     const isAuthenticated = computed(() => !!token.value);
+    const role = computed(() => user.value?.role ?? null);
 
+    function hasRole(roles) {
+        return !!role.value && roles.includes(role.value);
+    }
 
-    function init() {
+    async function init() {
         if (process.client) {
-            const storedToken = localStorage.getItem('token');
+            const storedToken = localStorage.getItem("token");
             if (storedToken) {
                 token.value = storedToken;
-                fetchUser();
+                await fetchUser();
             }
         }
+        ready.value = true;
     }
 
-
-    return { token, user, login, logout, isAuthenticated, init,fetchUser };
+    return { token, user, ready, login, logout, isAuthenticated, init, fetchUser, role, hasRole };
 });

@@ -20,7 +20,7 @@
           <span class="font-medium text-sm">O Meu Feed</span>
         </NuxtLink>
 
-        <NuxtLink to="/explore" class="flex items-center px-4 py-3 text-gray-600 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition group mb-6">
+        <NuxtLink to="/explorar" class="flex items-center px-4 py-3 text-gray-600 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition group mb-6">
           <i class="bi bi-compass-fill mr-3 text-lg group-hover:text-blue-600"></i>
           <span class="font-medium text-sm">Explorar</span>
         </NuxtLink>

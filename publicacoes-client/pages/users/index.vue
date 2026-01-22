@@ -129,6 +129,11 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: ['role'],
+  requiredRoles: ['Administrador'],
+});
+
 import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from "~/stores/auth-store.js";
 

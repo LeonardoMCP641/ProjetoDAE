@@ -44,11 +44,24 @@ public class UserService {
     @Authenticated
     public Response getUser(@PathParam("id") long id) {
         User user = userBean.find(id);
-        if (user != null) {
-            return Response.ok(UserDTO.from(user)).build();
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Utilizador não encontrado").build();
         }
-        return Response.status(Response.Status.NOT_FOUND).entity("Utilizador não encontrado").build();
+
+        boolean isAdmin = securityContext.isUserInRole("Administrador");
+
+        String requesterUsername = securityContext.getUserPrincipal().getName();
+        User requester = userBean.findByUsername(requesterUsername);
+
+        // Só admin ou o próprio
+        if (!isAdmin && requester.getId() != id) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        return Response.ok(UserDTO.from(user)).build();
     }
+
 
     @POST
     @Authenticated
@@ -75,6 +88,7 @@ public class UserService {
     @PUT
     @Path("/{id}")
     @Authenticated
+    @RolesAllowed({"Administrador"})
     public Response updateUser(@PathParam("id") long id, UserDTO dto) {
         User user = userBean.find(id);
         if (user == null) return Response.status(Response.Status.NOT_FOUND).build();
