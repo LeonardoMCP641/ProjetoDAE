@@ -50,7 +50,14 @@ public class PublicationService {
     /** Listar todas as publicações */
     @GET
     @Path("/")
-    public List<PublicationDTO> getAllPublications() {
+    public List<PublicationDTO> getAllPublications(
+            @QueryParam("q") String query,
+            @QueryParam("area") String area,
+            @QueryParam("tipo") String tipo
+    ) {
+        if ((query != null && !query.isEmpty()) || (area != null && !area.isEmpty()) || (tipo != null && !tipo.isEmpty())) {
+            return PublicationDTO.from(publicationBean.search(query, area, tipo));
+        }
         return PublicationDTO.from(publicationBean.listAll());
     }
 
