@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="42647a2d-1391-4f1c-b4a7-ba237a018fbc" name="Changes" comment="">
 <<<<<<< HEAD
 <<<<<<< Updated upstream
@@ -26,6 +27,9 @@
       <change beforePath="$PROJECT_DIR$/publicacoes-client/stores/auth-store.js" beforeDir="false" afterPath="$PROJECT_DIR$/publicacoes-client/stores/auth-store.js" afterDir="false" />
 >>>>>>> 4e1edce4150634bf6fb07500cc5507bdfe832f94
     </list>
+=======
+    <list default="true" id="42647a2d-1391-4f1c-b4a7-ba237a018fbc" name="Changes" comment="" />
+>>>>>>> Stashed changes
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

@@ -26,7 +26,7 @@
           <h2 class="text-3xl font-bold text-gray-800">Olá, {{ user?.name }} 👋</h2>
           <p class="text-gray-500 mt-1 text-sm">
             <span v-if="isSearching" class="text-blue-600 font-bold">Resultados da pesquisa</span>
-            <span v-else>A mostrar o teu feed personalizado</span>
+            <span v-else>A mostrar o teu feed personalizado (tags que segues)</span>
           </p>
         </div>
         <NuxtLink to="/publications/create" class="bg-green-600 text-white px-5 py-3 rounded-xl font-bold hover:bg-green-700 transition shadow-lg shadow-green-200 flex items-center">
@@ -112,6 +112,10 @@
             <button v-if="isSearching" @click="limparFiltros" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition">
               Limpar Filtros
             </button>
+            <div v-else class="flex justify-center gap-4">
+              <NuxtLink to="/tags" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition">Gerir Tags</NuxtLink>
+              <NuxtLink to="/explore" class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition">Explorar Tudo</NuxtLink>
+            </div>
           </div>
         </div>
 
@@ -123,11 +127,7 @@
             <div class="space-y-4">
               <div>
                 <label class="text-xs font-bold text-gray-400 uppercase mb-1 block">Ordenar por</label>
-                <select
-                    v-model="filters.sortBy"
-                    @change="pesquisar"
-                    class="w-full p-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-100 outline-none bg-white cursor-pointer"
-                >
+                <select v-model="filters.sortBy" @change="pesquisar" class="w-full p-2 rounded-lg border border-gray-200 text-sm outline-none bg-white cursor-pointer">
                   <option value="date">📅 Mais Recentes</option>
                   <option value="popular">🔥 Mais Populares (Comentários)</option>
                   <option value="rating">⭐ Melhor Classificados</option>
@@ -140,7 +140,7 @@
               </div>
               <div>
                 <label class="text-xs font-bold text-gray-400 uppercase mb-1 block">Tipo</label>
-                <select v-model="filters.tipo" class="w-full p-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-100 outline-none bg-white">
+                <select v-model="filters.tipo" class="w-full p-2 rounded-lg border border-gray-200 text-sm outline-none bg-white">
                   <option value="">Todos</option>
                   <option value="Artigo">Artigo</option>
                   <option value="Tese">Tese</option>
@@ -152,15 +152,32 @@
               </button>
             </div>
           </div>
+
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-2">
+            <NuxtLink to="/publications/mine" class="flex items-center p-3 hover:bg-gray-50 rounded-xl transition text-gray-700 font-medium group">
+              <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center mr-3 group-hover:bg-blue-600 group-hover:text-white transition">
+                <i class="bi bi-folder-fill"></i>
+              </span>
+              Meus Uploads
+            </NuxtLink>
+            <NuxtLink to="/tags" class="flex items-center p-3 hover:bg-gray-50 rounded-xl transition text-gray-700 font-medium group">
+              <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center mr-3 group-hover:bg-purple-600 group-hover:text-white transition">
+                <i class="bi bi-hash"></i>
+              </span>
+              Gerir Subscrições
+            </NuxtLink>
+          </div>
         </div>
 
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useAuthStore } from "~/stores/auth-store.js";
+import { usePublicationStore } from "~/stores/publication-store";
 import { storeToRefs } from "pinia";
 import { useRouter, useRoute } from "vue-router";
 
@@ -168,6 +185,7 @@ const config = useRuntimeConfig();
 const api = config.public.apiBase;
 const authStore = useAuthStore();
 const { token, user } = storeToRefs(authStore);
+const publicationStore = usePublicationStore();
 const router = useRouter();
 const route = useRoute();
 
@@ -175,7 +193,7 @@ const loading = ref(true);
 const publications = ref([]);
 const searchQuery = ref("");
 const isSearching = ref(false);
-const myTags = ref([]); // A nossa lista de tags subscritas
+const myTagNames = ref([]);
 
 const filters = ref({
   area: "",
@@ -183,7 +201,6 @@ const filters = ref({
   sortBy: "date"
 });
 
-// Corre assim que a página abre
 onMounted(async () => {
   if (token.value) {
     if(route.query.q) {
@@ -201,6 +218,7 @@ async function loadInitialData() {
   isSearching.value = false;
 
   try {
+    // Vamos buscar tudo primeiro
     const allPubs = await $fetch(`${api}/publicacoes`, {
       headers: { Authorization: `Bearer ${token.value}` }
     });
@@ -210,20 +228,20 @@ async function loadInitialData() {
     });
 
     // Descobrimos quais as tags que tu segues
-    myTags.value = allTags
+    myTagNames.value = allTags
         .filter(t => t.subscriberUsernames && t.subscriberUsernames.includes(user.value.username))
         .map(t => t.name);
 
-    // Filtramos o feed inicial
-    if (myTags.value.length > 0) {
+    // Filtramos o feed inicial pelas tuas tags
+    if (myTagNames.value.length > 0) {
       publications.value = allPubs.filter(p =>
-          p.tags && p.tags.some(tag => myTags.value.includes(tag))
+          p.tags && p.tags.some(tag => myTagNames.value.includes(tag))
       );
     } else {
-      publications.value = []; // Se não segues nada, o feed fica vazio
+      publications.value = [];
     }
 
-    // Ordenamos por data
+    // Ordenamos por data para o feed ficar fresquinho
     publications.value.sort((a, b) => new Date(b.publicationDate || 0) - new Date(a.publicationDate || 0));
 
   } catch (e) {
@@ -233,12 +251,17 @@ async function loadInitialData() {
   }
 }
 
-// 2. PESQUISA E ORDENAÇÃO (O "segurança" do teu feed)
+// 2. PESQUISA GLOBAL COM FILTROS E ORDENAÇÃO
 async function pesquisar() {
   if(!token.value) return;
 
   loading.value = true;
-  isSearching.value = !!searchQuery.value;
+  // Se houver texto ou se mudámos o sortBy/filtros, estamos em modo "pesquisa"
+  isSearching.value = true;
+
+  if (searchQuery.value) {
+    router.push({ query: { ...route.query, q: searchQuery.value } });
+  }
 
   try {
     const data = await $fetch(`${api}/publicacoes/pesquisa`, {
@@ -251,12 +274,11 @@ async function pesquisar() {
       }
     });
 
-    // ✨ AQUI ESTÁ O TRUQUE PARA NÃO MOSTRAR TUDO:
+    // Se a pesquisa estiver vazia mas mudámos a ordem,
+    // filtramos os resultados pelas tuas tags para manter o Feed personalizado
     if (!searchQuery.value) {
-      // Se a barra de pesquisa está vazia, FILTRAMOS SEMPRE pelas tuas tags
-      // Se não tiveres tags, o resultado será uma lista vazia automaticamente
       publications.value = data.filter(p =>
-          p.tags && p.tags.some(tag => myTags.value.includes(tag))
+          p.tags && p.tags.some(tag => myTagNames.value.includes(tag))
       );
     } else {
       // Se escreveste algo, mostramos a pesquisa global
@@ -264,13 +286,13 @@ async function pesquisar() {
     }
 
   } catch (e) {
-    console.error("Erro na pesquisa/ordenação", e);
+    console.error("Erro na pesquisa", e);
   } finally {
     loading.value = false;
   }
 }
 
-// Watchers para reagir aos cliques nos filtros
+// Watchers para reagir a mudanças nos filtros
 watch(() => filters.value.sortBy, () => pesquisar());
 watch(() => filters.value.tipo, () => pesquisar());
 

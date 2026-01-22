@@ -1,3 +1,4 @@
+
 <template>
   <div class="max-w-2xl mx-auto py-10">
 
@@ -88,6 +89,11 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: ['role'],
+  requiredRoles: ['Administrador'],
+});
+
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from "~/stores/auth-store.js";
