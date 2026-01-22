@@ -1,4 +1,4 @@
-package pt.ipleiria.estg.dei.ei.dae.publications.security;
+package pt.ipleiria.estg.dei.ei.dae.publications.providers;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;

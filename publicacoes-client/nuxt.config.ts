@@ -1,24 +1,26 @@
+// nuxt.config.ts
 export default defineNuxtConfig({
+  // Adiciona a data para o aviso amarelo desaparecer
+  compatibilityDate: '2026-01-21',
+
   devtools: { enabled: true },
 
-  // 1. Módulos
-  modules: ['@pinia/nuxt','@nuxtjs/tailwindcss'],
+  // 1. Módulos (Tailwind + Pinia)
+  modules: [
+    '@pinia/nuxt',
+    '@nuxtjs/tailwindcss'
+  ],
 
-  // 2. CSS Framework (Bootstrap 5 via CDN)
-  app: {
-    head: {
-      link: [
-        { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' }
-      ],
-      script: [
-        { src: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', tagPosition: 'bodyClose' }
-      ]
-    }
-  },
+  // 2. CSS Global
+  // Aqui carregamos SÓ os ícones.
+  // Removemos o Bootstrap CSS completo para não estragar o Tailwind.
+  css: [
+    'bootstrap-icons/font/bootstrap-icons.css'
+  ],
 
+  // 3. Configuração da API (Backend)
   runtimeConfig: {
     public: {
-
       apiBase: 'http://localhost:8080/publicacoescientificas/api'
     }
   }
