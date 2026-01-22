@@ -5,12 +5,15 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "ratings",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "publication_id"}))
+@Table(name = "ratings")
 @NamedQueries({
         @NamedQuery(
                 name = "getAllRatings",
-                query = "SELECT r FROM Rating r"
+                query = "SELECT r FROM Rating r ORDER BY r.id"
+        ),
+        @NamedQuery(
+                name = "Rating.findByUserAndPub",
+                query = "SELECT r FROM Rating r WHERE r.user.username = :username AND r.publication.id = :pubId"
         )
 })
 public class Rating implements Serializable {

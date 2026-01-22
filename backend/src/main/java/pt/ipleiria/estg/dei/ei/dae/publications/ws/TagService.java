@@ -40,19 +40,20 @@ public class TagService {
     @Path("{id}")
     public Response getTagDetails(@PathParam("id") long id) {
         Tag tag = tagBean.find(id);
-        if (tag == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        if (tag == null) return Response.status(Response.Status.NOT_FOUND).build();
         return Response.ok(TagDTO.from(tag)).build();
     }
-
 
     @POST
     @Path("/")
     @RolesAllowed({"Responsavel", "Administrador"})
     public Response createNewTag(TagDTO tagDTO) {
-        tagBean.create(tagDTO.getName());
-        return Response.status(Response.Status.CREATED).build();
+        try {
+            tagBean.create(tagDTO.getName());
+            return Response.status(Response.Status.CREATED).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
+        }
     }
 
     @PUT
@@ -60,11 +61,10 @@ public class TagService {
     @RolesAllowed({"Responsavel", "Administrador"})
     public Response updateTag(@PathParam("id") long id, TagDTO tagDTO) {
         Tag existingTag = tagBean.find(id);
-        if (existingTag == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        if (existingTag == null) return Response.status(Response.Status.NOT_FOUND).build();
+
         tagBean.update(id, tagDTO.getName());
-        return Response.status(Response.Status.OK).build();
+        return Response.ok().build();
     }
 
     @DELETE
@@ -72,36 +72,31 @@ public class TagService {
     @RolesAllowed({"Responsavel", "Administrador"})
     public Response removeTag(@PathParam("id") long id) {
         Tag existingTag = tagBean.find(id);
-        if (existingTag == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        if (existingTag == null) return Response.status(Response.Status.NOT_FOUND).build();
+
         tagBean.remove(id);
-        return Response.status(Response.Status.OK).build();
+        return Response.ok().build();
     }
 
     @POST
     @Path("{id}/subscricao")
-    @Authenticated
     public Response subscribeTag(@PathParam("id") long tagId) {
         String username = securityContext.getUserPrincipal().getName();
         var user = userBean.findByUsername(username);
-
         if (user == null) return Response.status(Response.Status.UNAUTHORIZED).build();
 
         tagBean.subscribe(user.getId(), tagId);
-        return Response.status(Response.Status.OK).build();
+        return Response.ok().build();
     }
 
     @DELETE
     @Path("{id}/subscricao")
-    @Authenticated
     public Response unsubscribeTag(@PathParam("id") long tagId) {
         String username = securityContext.getUserPrincipal().getName();
         var user = userBean.findByUsername(username);
-
         if (user == null) return Response.status(Response.Status.UNAUTHORIZED).build();
 
         tagBean.unsubscribe(user.getId(), tagId);
-        return Response.status(Response.Status.OK).build();
+        return Response.ok().build();
     }
 }

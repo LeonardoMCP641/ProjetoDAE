@@ -12,17 +12,19 @@ public class TagDTO implements Serializable {
 
     private long id;
     private String name;
-
     private List<String> subscriberUsernames;
+
+    private int usageCount;
 
     public TagDTO() {
         this.subscriberUsernames = new ArrayList<>();
     }
 
-    public TagDTO(long id, String name, List<String> subscriberUsernames) {
+    public TagDTO(long id, String name, List<String> subscriberUsernames, int usageCount) {
         this.id = id;
         this.name = name;
         this.subscriberUsernames = subscriberUsernames;
+        this.usageCount = usageCount;
     }
 
     public static TagDTO from(Tag tag) {
@@ -37,7 +39,8 @@ public class TagDTO implements Serializable {
         return new TagDTO(
                 tag.getId(),
                 tag.getName(),
-                names
+                names,
+                names.size()
         );
     }
 
@@ -45,6 +48,7 @@ public class TagDTO implements Serializable {
         return tags.stream().map(TagDTO::from).collect(Collectors.toList());
     }
 
+    // Getters e Setters
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
 
@@ -53,4 +57,7 @@ public class TagDTO implements Serializable {
 
     public List<String> getSubscriberUsernames() { return subscriberUsernames; }
     public void setSubscriberUsernames(List<String> subscriberUsernames) { this.subscriberUsernames = subscriberUsernames; }
+
+    public int getUsageCount() { return usageCount; }
+    public void setUsageCount(int usageCount) { this.usageCount = usageCount; }
 }

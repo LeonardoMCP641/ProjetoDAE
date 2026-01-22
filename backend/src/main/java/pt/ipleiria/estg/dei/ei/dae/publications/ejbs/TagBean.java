@@ -17,8 +17,18 @@ public class TagBean {
     private EntityManager em;
 
     public void create(String name) {
-        var tag = new Tag(name);
+        String cleanName = name.trim();
 
+        long count = em.createQuery(
+                        "SELECT COUNT(t) FROM Tag t WHERE LOWER(t.name) = LOWER(:name)", Long.class)
+                .setParameter("name", cleanName.toLowerCase())
+                .getSingleResult();
+
+        if (count > 0) {
+            throw new IllegalArgumentException("A tag '" + cleanName + "' já existe!");
+        }
+
+        Tag tag = new Tag(cleanName);
         em.persist(tag);
     }
 

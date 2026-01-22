@@ -1,71 +1,92 @@
 <template>
-  <div class="flex min-h-screen bg-gray-50 font-sans">
+  <div class="min-h-screen bg-gray-50 flex font-sans">
 
-    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full shadow-sm z-20">
-      <div class="p-6 border-b border-gray-100 flex items-center">
-        <div class="bg-blue-600 text-white p-1.5 rounded mr-3">
-          <i class="bi bi-journal-text text-xl"></i>
+    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full z-50">
+
+      <div class="p-6 flex items-center border-b border-gray-50">
+        <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white mr-3 shadow-blue-200 shadow-md">
+          <i class="bi bi-collection-fill text-lg"></i>
         </div>
         <div>
-          <h1 class="text-lg font-bold text-gray-800 leading-tight">XYZ Center</h1>
-          <p class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Scientific Platform</p>
+          <h1 class="font-bold text-gray-800 text-lg leading-tight">XYZ Center</h1>
+          <p class="text-[10px] text-gray-400 font-bold tracking-widest uppercase">Scientific Platform</p>
         </div>
       </div>
 
-      <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
+      <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1">
 
-        <NuxtLink to="/" class="nav-item" active-class="active">
-          <i class="bi bi-grid-1x2 mr-3 text-lg"></i> Dashboard
-        </NuxtLink>
-
-        <template v-if="token">
-          <div class="mt-6 mb-2 px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            Publicações
-          </div>
-
-          <NuxtLink to="/publications" class="nav-item" active-class="active">
-            <i class="bi bi-globe mr-3 text-lg"></i> Explorar
-          </NuxtLink>
-
-          <NuxtLink to="/publications/mine" class="nav-item" active-class="active">
-            <i class="bi bi-folder2-open mr-3 text-lg"></i> Meus Uploads
-          </NuxtLink>
-
-          <NuxtLink to="/tags" class="nav-item" active-class="active">
-            <i class="bi bi-tags mr-3 text-lg"></i> Tags Subscritas
-          </NuxtLink>
-        </template>
-
-        <template v-else>
-          <NuxtLink to="/auth/login" class="nav-item text-blue-600 bg-blue-50 mt-4">
-            <i class="bi bi-box-arrow-in-right mr-3 text-lg"></i> Fazer Login
-          </NuxtLink>
-        </template>
-      </nav>
-
-      <div v-if="token" class="p-4 border-t border-gray-100 bg-gray-50">
-        <div class="flex items-center mb-3">
-          <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold mr-3">
-            {{ user?.username?.charAt(0).toUpperCase() }}
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-bold text-gray-900 truncate">{{ user?.username }}</p>
-            <p class="text-xs text-gray-500 truncate">{{ user?.role || 'Colaborador' }}</p>
-          </div>
+        <div class="px-4 mb-2 mt-6">
+          <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Publicações</p>
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
-          <NuxtLink to="/users/profile" class="text-xs text-center py-1.5 border border-gray-200 rounded hover:bg-white transition">
-            Perfil
+        <NuxtLink to="/" class="flex items-center px-4 py-3 text-gray-600 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition group mb-1">
+          <i class="bi bi-house-door-fill mr-3 text-lg group-hover:text-blue-600"></i>
+          <span class="font-medium text-sm">O Meu Feed</span>
+        </NuxtLink>
+
+        <NuxtLink to="/explorar" class="flex items-center px-4 py-3 text-gray-600 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition group mb-6">
+          <i class="bi bi-compass-fill mr-3 text-lg group-hover:text-blue-600"></i>
+          <span class="font-medium text-sm">Explorar</span>
+        </NuxtLink>
+
+        <NuxtLink to="/publications/mine" class="flex items-center px-4 py-2.5 text-gray-600 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition group">
+          <i class="bi bi-folder mr-3 group-hover:text-blue-600"></i>
+          <span class="font-medium text-sm">Meus Uploads</span>
+        </NuxtLink>
+
+        <NuxtLink to="/tags" class="flex items-center px-4 py-2.5 text-gray-600 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition group">
+          <i class="bi bi-tags mr-3 group-hover:text-blue-600"></i>
+          <span class="font-medium text-sm">Tags Subscritas</span>
+        </NuxtLink>
+
+
+        <div v-if="user?.role === 'Administrador'" class="mt-8">
+          <div class="px-4 mb-2">
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Administração</p>
+          </div>
+
+          <NuxtLink to="/tags/manage" class="flex items-center px-4 py-2.5 text-gray-600 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition group">
+            <i class="bi bi-folder-plus mr-3 group-hover:text-orange-600"></i>
+            <span class="font-medium text-sm">Gestão de Tags</span>
           </NuxtLink>
-          <button @click="handleLogout" class="text-xs text-center py-1.5 border border-red-200 text-red-600 rounded hover:bg-red-50 transition">
+
+          <NuxtLink to="/users" class="flex items-center px-4 py-2.5 text-gray-600 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition group">
+            <i class="bi bi-people-fill mr-3 group-hover:text-orange-600"></i>
+            <span class="font-medium text-sm">Gestão de Users</span>
+          </NuxtLink>
+        </div>
+
+      </nav>
+
+      <div v-if="user" class="p-4 border-t border-gray-100 bg-gray-50/50">
+        <div class="flex items-center mb-3">
+          <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold mr-3 border-2 border-white shadow-sm">
+            {{ user.username.charAt(0).toUpperCase() }}
+          </div>
+          <div class="overflow-hidden">
+            <p class="text-sm font-bold text-gray-800 truncate">{{ user.username }}</p>
+            <p class="text-xs text-gray-500 truncate">{{ user.role }}</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button class="flex items-center justify-center px-3 py-1.5 text-xs font-bold text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+            Perfil
+          </button>
+          <button @click="logout" class="flex items-center justify-center px-3 py-1.5 text-xs font-bold text-red-600 bg-white border border-red-100 rounded-lg hover:bg-red-50 transition">
             Sair
           </button>
         </div>
       </div>
+
+      <div v-else class="p-4 border-t border-gray-100">
+        <NuxtLink to="/auth/login" class="flex items-center justify-center w-full py-2.5 bg-blue-600 text-white font-bold text-sm rounded-xl hover:bg-blue-700 transition shadow-blue-200 shadow-sm">
+          Entrar
+        </NuxtLink>
+      </div>
+
     </aside>
 
-    <main class="flex-1 ml-64 p-8 min-h-screen">
+    <main class="flex-1 ml-64 p-8">
       <slot />
     </main>
 
@@ -75,31 +96,24 @@
 <script setup>
 import { useAuthStore } from "~/stores/auth-store.js";
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
 
 const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 const router = useRouter();
-const { token, user } = storeToRefs(authStore);
 
-function handleLogout() {
+function logout() {
   authStore.logout();
   router.push('/auth/login');
 }
 </script>
 
-<style scoped>
-.nav-item {
-  @apply flex items-center px-4 py-2.5 text-gray-600 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors font-medium text-sm;
+<style>
+.router-link-active {
+  background-color: #eff6ff;
+  color: #2563eb;
 }
-
-.nav-item.active {
-  @apply bg-blue-50 text-blue-700 font-bold border border-blue-100 shadow-sm;
-}
-
-.nav-item i {
-  @apply transition-colors;
-}
-
-.nav-item:hover i {
-  @apply text-blue-600;
+.router-link-active i {
+  color: #2563eb;
 }
 </style>

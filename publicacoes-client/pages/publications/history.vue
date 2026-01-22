@@ -75,8 +75,7 @@ onMounted(async () => {
       }
     );
 
-    // Assumindo que cada item do histórico tem: publicationTitle, editorName, fieldName, oldValue, newValue, editedAt
-    history.value = res;
+  history.value = res;
   } catch (err) {
     console.error("Erro ao carregar histórico", err);
     router.push("/publications/mine");

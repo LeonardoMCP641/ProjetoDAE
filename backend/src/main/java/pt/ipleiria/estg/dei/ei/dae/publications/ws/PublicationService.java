@@ -8,6 +8,7 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.CommentDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
+import pt.ipleiria.estg.dei.ei.dae.publications.dtos.RatingDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.CommentBean;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.PublicationBean;
 import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.RatingBean;
@@ -32,29 +33,24 @@ public class PublicationService {
 
     @EJB
     private PublicationBean publicationBean;
-
     @EJB
     private CommentBean commentBean;
-
     @EJB
     private UserBean userBean;
-
     @EJB
     private RatingBean ratingBean;
 
     @Context
     private SecurityContext securityContext;
 
-    private static final String UPLOAD_DIR = "C:/Users/Matilde/Desktop";
+    private static final String UPLOAD_DIR = "C:/Users/Matilde/Desktop/uploads";
 
-    /** Listar todas as publicações */
     @GET
     @Path("/")
     public List<PublicationDTO> getAllPublications() {
         return PublicationDTO.from(publicationBean.listAll());
     }
 
-    /** Obter publicação por ID */
     @GET
     @Path("{id}")
     public Response getPublication(@PathParam("id") long id) {
@@ -63,195 +59,159 @@ public class PublicationService {
         return Response.ok(new PublicationDTO(p)).build();
     }
 
-    /** Criar nova publicação */
     @POST
     @Path("/")
     public Response createPublication(PublicationDTO dto) {
         String username = securityContext.getUserPrincipal().getName();
         User user = userBean.findByUsername(username);
-
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+        if (user == null) return Response.status(Response.Status.UNAUTHORIZED).build();
 
         Publication p = publicationBean.create(dto, user);
         return Response.status(Response.Status.CREATED).entity(new PublicationDTO(p)).build();
     }
 
-    /** Atualizar publicação */
     @PUT
     @Path("{id}")
     public Response updatePublication(@PathParam("id") long id, PublicationDTO dto) {
-        // 1. Buscar a publicação
         Publication p = publicationBean.find(id);
-        if (p == null)
-            return Response.status(Response.Status.NOT_FOUND).build();
+        if (p == null) return Response.status(Response.Status.NOT_FOUND).build();
 
-        // 2. Buscar o user logado (editor)
         String username = securityContext.getUserPrincipal().getName();
         User editor = userBean.findByUsername(username);
-        if (editor == null)
-            return Response.status(Response.Status.UNAUTHORIZED).build();
 
         boolean isOwner = p.getUser().getUsername().equals(username);
+        boolean isChefe = securityContext.isUserInRole("Administrador") || securityContext.isUserInRole("Responsavel");
 
-        // 3. Só o dono altera conteúdo (titulo, autores, area, tipo, resumo)
+        if (!isOwner && !isChefe) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Não tem permissão.").build();
+        }
+
         if (isOwner) {
             p.setTitulo(dto.getTitulo());
             p.setAutores(dto.getAutores());
             p.setArea(dto.getArea());
             p.setTipo(dto.getTipo());
             p.setResumoCurto(dto.getResumoCurto());
-            p.setFilename(dto.getFilename());
-            p.setFilepath(dto.getFilepath());
         }
 
-        // 4. Todos podem alterar visibilidade
         p.setVisivel(dto.isVisivel());
 
-        // 5. Chamar update passando o editor para criar histórico
         publicationBean.update(p, editor);
-
-        // 6. Retornar DTO atualizado
         return Response.ok(new PublicationDTO(p)).build();
     }
 
-    /** Apagar publicação */
     @DELETE
     @Path("{id}")
-    @RolesAllowed({"Responsavel", "Administrador"})
     public Response deletePublication(@PathParam("id") long id) {
         Publication p = publicationBean.find(id);
         if (p == null) return Response.status(Response.Status.NOT_FOUND).build();
 
+        String username = securityContext.getUserPrincipal().getName();
+
+        boolean isOwner = p.getUser().getUsername().equals(username);
+        boolean isChefe = securityContext.isUserInRole("Administrador") || securityContext.isUserInRole("Responsavel");
+
+        if (!isOwner && !isChefe) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Apenas o dono ou moderadores podem apagar.").build();
+        }
+
         publicationBean.delete(id);
         return Response.noContent().build();
-    }
-
-
-    @POST
-    @Path("{id}/tags/{tagId}")
-    public Response associateTag(@PathParam("id") long publicationId, @PathParam("tagId") long tagId) {
-        publicationBean.associarTag(publicationId, tagId);
-        return Response.ok().build();
-    }
-
-    @DELETE
-    @Path("{id}/tags/{tagId}")
-    public Response dissociateTag(@PathParam("id") long publicationId, @PathParam("tagId") long tagId) {
-        publicationBean.desassociarTag(publicationId, tagId);
-        return Response.ok().build();
     }
 
     @POST
     @Path("{id}/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(@PathParam("id") long id, MultipartFormDataInput input) throws IOException {
-        // 1. Buscar publicação
         Publication p = publicationBean.find(id);
-        if (p == null)
-            return Response.status(Response.Status.NOT_FOUND).entity("Publicação não encontrada").build();
+        if (p == null) return Response.status(Response.Status.NOT_FOUND).build();
 
-        // 2. Buscar editor logado
         String username = securityContext.getUserPrincipal().getName();
-        User editor = userBean.findByUsername(username);
-        if (editor == null)
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+        if (!p.getUser().getUsername().equals(username)) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
 
-        // 3. Verificar ficheiro no form-data
+        User editor = userBean.findByUsername(username);
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
         if (!uploadForm.containsKey("file") || uploadForm.get("file").isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Ficheiro em falta").build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         InputPart filePart = uploadForm.get("file").get(0);
-
-        // 4. Extrair filename
         String contentDisposition = filePart.getHeaders().getFirst("Content-Disposition");
         String filename = contentDisposition.replaceFirst("(?i)^.*filename=\"?([^\"]+)\"?.*$", "$1");
 
-        // 5. Criar diretório se necessário
         java.nio.file.Path dir = Paths.get(UPLOAD_DIR);
         if (!Files.exists(dir)) Files.createDirectories(dir);
+        java.nio.file.Path filepath = dir.resolve(System.currentTimeMillis() + "_" + filename);
 
-        java.nio.file.Path filepath = dir.resolve(filename);
-
-        // 6. Salvar ficheiro
         try (InputStream in = filePart.getBody(InputStream.class, null);
              OutputStream out = Files.newOutputStream(filepath)) {
             in.transferTo(out);
         }
 
-        // 7. Atualizar publicação com novo ficheiro
         p.setFilename(filename);
         p.setFilepath(filepath.toString());
-
-        // 8. Usar update com editor para registar histórico
         publicationBean.update(p, editor);
 
-        return Response.ok("Ficheiro carregado com sucesso: " + filename).build();
+        return Response.ok("Upload concluído.").build();
     }
-
 
     @GET
     @Path("{id}/download")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response downloadFile(@PathParam("id") long id) throws IOException {
+    public Response downloadFile(@PathParam("id") long id) {
         Publication p = publicationBean.find(id);
         if (p == null) return Response.status(Response.Status.NOT_FOUND).build();
 
-        if (p.getFilepath() == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Esta publicação não tem ficheiro").build();
+        if (!p.isVisivel()) {
+            String username = securityContext.getUserPrincipal().getName();
+            boolean isOwner = p.getUser().getUsername().equals(username);
+            boolean isChefe = securityContext.isUserInRole("Administrador") || securityContext.isUserInRole("Responsavel");
+            if (!isOwner && !isChefe) {
+                return Response.status(Response.Status.FORBIDDEN).entity("Publicação privada.").build();
+            }
         }
 
+        if (p.getFilepath() == null) return Response.status(Response.Status.NOT_FOUND).build();
+
         java.nio.file.Path filepath = Paths.get(p.getFilepath());
-        if (!Files.exists(filepath) || !Files.isRegularFile(filepath)) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Ficheiro físico não encontrado").build();
-        }
+        if (!Files.exists(filepath)) return Response.status(Response.Status.NOT_FOUND).build();
 
         return Response.ok(filepath.toFile())
                 .header("Content-Disposition", "attachment; filename=\"" + p.getFilename() + "\"")
                 .build();
     }
 
-    @POST
-    @Authenticated
-    @Path("{id}/comentarios")
-    public Response commentPublication(@PathParam("id") long publicationId, pt.ipleiria.estg.dei.ei.dae.publications.dtos.CommentDTO commentDTO) {
 
+    @POST
+    @Path("{id}/comentarios")
+    public Response commentPublication(@PathParam("id") long publicationId, CommentDTO commentDTO) {
         String username = securityContext.getUserPrincipal().getName();
         commentBean.create(publicationId, username, commentDTO.getText());
         return Response.status(Response.Status.CREATED).build();
     }
 
     @POST
-    @Path("comentarios/{id}/resposta")
-    @Authenticated
-    public Response replyToComment(@PathParam("id") long parentCommentId, CommentDTO commentDTO) {
+    @Path("{id}/comentarios/{commentId}/reply")
+    public Response replyToComment(@PathParam("id") long publicationId, @PathParam("commentId") long parentId, CommentDTO dto) {
         String username = securityContext.getUserPrincipal().getName();
-
-        commentBean.reply(parentCommentId, username, commentDTO.getText());
-
+        commentBean.reply(parentId, username, dto.getText());
         return Response.status(Response.Status.CREATED).build();
     }
 
     @DELETE
     @Path("comentarios/{id}")
-    @Authenticated
     public Response deleteComment(@PathParam("id") long commentId) {
         String username = securityContext.getUserPrincipal().getName();
-        User user = userBean.findByUsername(username);
-
         var comment = commentBean.find(commentId);
-        if (comment == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        if (comment == null) return Response.status(Response.Status.NOT_FOUND).build();
 
         boolean isOwner = comment.getUser().getUsername().equals(username);
-        boolean isAdmin = user.getRole().toString().equals("Administrador");
+        boolean isChefe = securityContext.isUserInRole("Administrador") || securityContext.isUserInRole("Responsavel");
 
-        if (!isOwner && !isAdmin) {
-            return Response.status(Response.Status.FORBIDDEN).entity("Não tens permissão para apagar este comentário.").build();
+        if (!isOwner && !isChefe) {
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
 
         commentBean.delete(commentId);
@@ -260,12 +220,9 @@ public class PublicationService {
 
     @POST
     @Path("{id}/rating")
-    @Authenticated
-    public Response ratePublication(@PathParam("id") long publicationId, pt.ipleiria.estg.dei.ei.dae.publications.dtos.RatingDTO dto) {
+    public Response ratePublication(@PathParam("id") long publicationId, RatingDTO dto) {
         String username = securityContext.getUserPrincipal().getName();
-
         ratingBean.rate(publicationId, username, dto.getValue());
-
         return Response.ok().build();
     }
 }

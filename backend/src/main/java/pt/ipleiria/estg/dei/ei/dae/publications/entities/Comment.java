@@ -22,6 +22,7 @@ public class Comment implements Serializable {
     private Long id;
 
     @NotNull
+    @Column(columnDefinition = "TEXT")
     private String text;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,7 +44,8 @@ public class Comment implements Serializable {
 
     private boolean visible;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
+    // Lista de Respostas (Filhos)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Comment> replies;
 
     public Comment() {
@@ -64,27 +66,90 @@ public class Comment implements Serializable {
 
     // --- GETTERS E SETTERS ---
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getText() { return text; }
-    public void setText(String text) { this.text = text; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public String getText() {
+        return text;
+    }
 
-    public Publication getPublication() { return publication; }
-    public void setPublication(Publication publication) { this.publication = publication; }
+    public void setText(String text) {
+        this.text = text;
+    }
 
-    public Date getTimestamp() { return timestamp; }
-    public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
+    public User getUser() {
+        return user;
+    }
 
-    public Comment getParent() { return parent; }
-    public void setParent(Comment parent) { this.parent = parent; }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-    public List<Comment> getReplies() { return replies; }
-    public void setReplies(List<Comment> replies) { this.replies = replies; }
+    public Publication getPublication() {
+        return publication;
+    }
 
-    public boolean isVisible() { return visible; }
-    public void setVisible(boolean visible) { this.visible = visible; }
+    public void setPublication(Publication publication) {
+        this.publication = publication;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Comment getParent() {
+        return parent;
+    }
+
+    public void setParent(Comment parent) {
+        this.parent = parent;
+    }
+
+    public List<Comment> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Comment> replies) {
+        this.replies = replies;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public void addReply(Comment reply) {
+        if (!replies.contains(reply)) {
+            replies.add(reply);
+            reply.setParent(this);
+        }
+    }
+
+    public void removeReply(Comment reply) {
+        if (replies.contains(reply)) {
+            replies.remove(reply);
+            reply.setParent(null);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", text='" + text + '\'' +
+                ", author=" + (user != null ? user.getUsername() : "null") +
+                '}';
+    }
 }

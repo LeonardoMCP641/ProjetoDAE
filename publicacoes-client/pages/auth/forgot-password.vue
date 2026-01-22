@@ -1,48 +1,66 @@
 <template>
-  <div class="min-h-screen bg-slate-50 flex items-center justify-center py-12 px-4">
-    <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-sm border border-slate-200">
+  <div class="flex items-center justify-center min-h-[80vh] bg-slate-50 py-12 px-4">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transform transition-all hover:shadow-2xl">
 
-      <div class="text-center">
-        <h2 class="text-3xl font-extrabold text-slate-900">Recuperar Acesso</h2>
-        <p class="mt-2 text-sm text-slate-500">
-          Introduza o seu e-mail para receber uma nova palavra-passe.
-        </p>
+      <div class="bg-blue-600 p-8 text-center relative overflow-hidden">
+        <div class="relative z-10">
+          <h2 class="text-3xl font-bold text-white mb-2">Recuperar Acesso</h2>
+          <p class="text-blue-100 text-sm">Vamos enviar-te uma nova password.</p>
+        </div>
+        <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
       </div>
 
-      <form @submit.prevent="handleRecover" class="mt-8 space-y-6">
-        <div class="flex flex-col">
-          <label class="text-sm font-semibold text-slate-700 mb-1 ml-1">Endereço de E-mail</label>
-          <input
-              v-model="email"
-              type="email"
-              required
-              placeholder="exemplo@centro.pt"
-              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all"
-          />
-          <p v-if="emailError" class="text-xs text-red-500 mt-1 ml-1">{{ emailError }}</p>
+      <div class="p-8">
+        <form @submit.prevent="handleRecover" class="space-y-6">
+
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Endereço de E-mail</label>
+            <div class="relative group">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-blue-500 transition">
+                <i class="bi bi-envelope text-lg"></i>
+              </span>
+              <input
+                  v-model="email"
+                  id="email"
+                  type="email"
+                  required
+                  placeholder="exemplo@centro.pt"
+                  class="w-full pl-10 pr-3 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-gray-50 focus:bg-white"
+                  :class="{'border-red-300 ring-red-200': emailError}"
+              />
+            </div>
+            <p v-if="emailError" class="text-xs text-red-500 mt-1 ml-1 flex items-center">
+              <i class="bi bi-x-circle mr-1"></i> {{ emailError }}
+            </p>
+          </div>
+
+          <button
+              type="submit"
+              :disabled="loading || !!emailError"
+              class="w-full bg-blue-600 text-white font-bold py-3.5 px-4 rounded-xl hover:bg-blue-700 transform hover:-translate-y-0.5 transition duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
+          >
+            <svg v-if="loading" class="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {{ loading ? 'A processar...' : 'Enviar Nova Password' }}
+          </button>
+        </form>
+
+        <div class="mt-6 text-center">
+          <NuxtLink to="/auth/login" class="text-sm text-gray-500 hover:text-blue-600 font-medium transition flex items-center justify-center">
+            <i class="bi bi-arrow-left mr-1"></i> Voltar ao Login
+          </NuxtLink>
         </div>
 
-        <button
-            type="submit"
-            :disabled="loading || !!emailError"
-            class="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all active:scale-[0.98] disabled:opacity-50 flex justify-center items-center"
-        >
-          <svg v-if="loading" class="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" viewBox="0 0 24 24"></svg>
-          {{ loading ? 'A processar...' : 'Enviar Nova Password' }}
-        </button>
-      </form>
-
-      <div class="text-center mt-4">
-        <NuxtLink to="/auth/login" class="text-sm font-medium text-blue-600 hover:text-blue-500">
-          Voltar ao Login
-        </NuxtLink>
+        <div v-if="statusMessage"
+             :class="isError ? 'bg-red-50 text-red-600 border-red-100' : 'bg-emerald-50 text-emerald-700 border-emerald-100'"
+             class="mt-6 p-4 rounded-xl text-sm text-center font-medium border flex items-center justify-center animate-pulse">
+          <i :class="isError ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill'" class="mr-2 text-lg"></i>
+          {{ statusMessage }}
+        </div>
       </div>
 
-      <p v-if="statusMessage"
-         :class="isError ? 'text-red-600 bg-red-50' : 'text-emerald-700 bg-emerald-50'"
-         class="mt-4 p-3 rounded-lg text-sm text-center font-medium">
-        {{ statusMessage }}
-      </p>
     </div>
   </div>
 </template>
@@ -54,7 +72,6 @@ const loading = ref(false);
 const statusMessage = ref('');
 const isError = ref(false);
 
-// Validação simples (Ficha 6, Parte I)
 const emailError = computed(() => {
   if (!email.value) return null;
   const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -72,11 +89,11 @@ async function handleRecover() {
     });
 
     isError.value = false;
-    statusMessage.value = data; // "Uma nova password foi enviada..."
-    email.value = ''; // Limpar campo
+    statusMessage.value = data;
+    email.value = '';
   } catch (err) {
     isError.value = true;
-    statusMessage.value = err.data || "Erro ao recuperar password. Verifique o e-mail.";
+    statusMessage.value = err.response?._data || "Erro ao recuperar password. Verifique o e-mail.";
   } finally {
     loading.value = false;
   }
