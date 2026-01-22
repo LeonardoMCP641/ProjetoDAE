@@ -82,10 +82,12 @@ public class PublicationService {
     @PUT
     @Path("{id}")
     public Response updatePublication(@PathParam("id") long id, PublicationDTO dto) {
+        // 1. Buscar a publicação
         Publication p = publicationBean.find(id);
         if (p == null)
             return Response.status(Response.Status.NOT_FOUND).build();
 
+        // 2. Buscar o user logado (editor)
         String username = securityContext.getUserPrincipal().getName();
         User editor = userBean.findByUsername(username);
         if (editor == null)
@@ -93,18 +95,24 @@ public class PublicationService {
 
         boolean isOwner = p.getUser().getUsername().equals(username);
 
+        // 3. Só o dono altera conteúdo (titulo, autores, area, tipo, resumo)
         if (isOwner) {
             p.setTitulo(dto.getTitulo());
             p.setAutores(dto.getAutores());
             p.setArea(dto.getArea());
             p.setTipo(dto.getTipo());
             p.setResumoCurto(dto.getResumoCurto());
+            p.setFilename(dto.getFilename());
+            p.setFilepath(dto.getFilepath());
         }
 
-        // Todos podem alterar visibilidade
+        // 4. Todos podem alterar visibilidade
         p.setVisivel(dto.isVisivel());
 
-        publicationBean.update(p);
+        // 5. Chamar update passando o editor para criar histórico
+        publicationBean.update(p, editor);
+
+        // 6. Retornar DTO atualizado
         return Response.ok(new PublicationDTO(p)).build();
     }
 
@@ -139,40 +147,52 @@ public class PublicationService {
     @Path("{id}/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(@PathParam("id") long id, MultipartFormDataInput input) throws IOException {
+        // 1. Buscar publicação
         Publication p = publicationBean.find(id);
-        if (p == null) return Response.status(Response.Status.NOT_FOUND).entity("Publicação não encontrada").build();
+        if (p == null)
+            return Response.status(Response.Status.NOT_FOUND).entity("Publicação não encontrada").build();
 
+        // 2. Buscar editor logado
+        String username = securityContext.getUserPrincipal().getName();
+        User editor = userBean.findByUsername(username);
+        if (editor == null)
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
+        // 3. Verificar ficheiro no form-data
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
-
         if (!uploadForm.containsKey("file") || uploadForm.get("file").isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Ficheiro em falta").build();
         }
 
         InputPart filePart = uploadForm.get("file").get(0);
 
-        // Extrair filename
+        // 4. Extrair filename
         String contentDisposition = filePart.getHeaders().getFirst("Content-Disposition");
         String filename = contentDisposition.replaceFirst("(?i)^.*filename=\"?([^\"]+)\"?.*$", "$1");
 
+        // 5. Criar diretório se necessário
         java.nio.file.Path dir = Paths.get(UPLOAD_DIR);
         if (!Files.exists(dir)) Files.createDirectories(dir);
 
         java.nio.file.Path filepath = dir.resolve(filename);
 
+        // 6. Salvar ficheiro
         try (InputStream in = filePart.getBody(InputStream.class, null);
              OutputStream out = Files.newOutputStream(filepath)) {
             in.transferTo(out);
         }
 
-        // Atualiza a publicação com nome e caminho do ficheiro
+        // 7. Atualizar publicação com novo ficheiro
         p.setFilename(filename);
         p.setFilepath(filepath.toString());
-        publicationBean.update(p);
+
+        // 8. Usar update com editor para registar histórico
+        publicationBean.update(p, editor);
 
         return Response.ok("Ficheiro carregado com sucesso: " + filename).build();
     }
 
-    /** Download de ficheiro associado à publicação */
+
     @GET
     @Path("{id}/download")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -193,21 +213,6 @@ public class PublicationService {
                 .header("Content-Disposition", "attachment; filename=\"" + p.getFilename() + "\"")
                 .build();
     }
-
-    @GET
-    @Path("/")
-    public List<PublicationDTO> getAllPublications(
-            @QueryParam("q") String query,
-            @QueryParam("area") String area,
-            @QueryParam("tipo") String tipo
-    ) {
-        // Se tiver filtros, usa o search, senão usa o listAll
-        if (query != null || area != null || tipo != null) {
-            return PublicationDTO.from(publicationBean.search(query, area, tipo));
-        }
-        return PublicationDTO.from(publicationBean.listAll());
-    }
-
 
     @POST
     @Authenticated
