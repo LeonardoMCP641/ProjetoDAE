@@ -19,13 +19,14 @@ public class PublicationHistoryService {
     private PublicationHistoryBean historyBean;
 
     @GET
-    @Path("/{id}/historico")
+    @Path("history/{id}/")
     public List<PublicationHistoryDTO> getHistorico(@PathParam("id") Long publicationId) {
         return historyBean.getHistoryByPublication(publicationId)
                 .stream()
                 .map(h -> new PublicationHistoryDTO(
                         h.getPublication().getId(),
                         h.getFieldName(),
+                        h.getEditor() != null ? h.getEditor().getName() : "Desconhecido",
                         h.getOldValue(),
                         h.getNewValue(),
                         h.getEditedAt()
@@ -33,13 +34,14 @@ public class PublicationHistoryService {
                 .collect(Collectors.toList());
     }
     @GET
-    @Path("/historico") // Histórico de todas as publicações
+    @Path("/history") // Histórico de todas as publicações
     public List<PublicationHistoryDTO> getAllHistorico() {
         return historyBean.getAllHistory()
                 .stream()
                 .map(h -> new PublicationHistoryDTO(
                         h.getPublication().getId(),  // adiciona o ID da publicação
                         h.getFieldName(),
+                        h.getEditor() != null ? h.getEditor().getName() : "Desconhecido",
                         h.getOldValue(),
                         h.getNewValue(),
                         h.getEditedAt()

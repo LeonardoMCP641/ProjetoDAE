@@ -97,12 +97,22 @@
               (pub) => pub.visivel,
             )"
             :key="p.id"
-            class="list-group-item"
+            class="card mb-3 shadow-sm"
           >
-            <NuxtLink :to="`/publications/${p.id}`">
-              <h5>{{ p.titulo }}</h5>
-              <p>{{ p.resumoCurto }}</p>
-            </NuxtLink>
+            <div class="card-body">
+              <NuxtLink
+                :to="`/publications/${p.id}`"
+                class="text-decoration-none"
+              >
+                <h5 class="card-title"><strong>Titulo:</strong>{{ p.titulo }}</h5>
+                <p class="card-text"><strong>Resumo:</strong> {{ p.resumoCurto }}</p>
+
+                <!-- Novos campos -->
+                <p class="mb-1">
+                  <strong>Autores:</strong> {{ p.autores?.join(", ") }}
+                </p>
+              </NuxtLink>
+            </div>
           </div>
         </div>
 
