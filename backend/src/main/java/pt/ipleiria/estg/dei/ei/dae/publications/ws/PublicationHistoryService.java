@@ -76,4 +76,24 @@ public class PublicationHistoryService {
                 ))
                 .collect(Collectors.toList());
     }
+    @GET
+    @Path("/history/editor/{userId}")
+    @RolesAllowed({"Administrador"})
+    public Response getHistoricoByEditor(@PathParam("userId") Long userId) {
+
+        List<PublicationHistoryDTO> dtos = historyBean.getHistoryByEditorUserId(userId)
+                .stream()
+                .map(h -> new PublicationHistoryDTO(
+                        h.getPublication().getId(),
+                        h.getFieldName(),
+                        h.getEditor() != null ? h.getEditor().getName() : "Desconhecido",
+                        h.getOldValue(),
+                        h.getNewValue(),
+                        h.getEditedAt()
+                ))
+                .toList();
+
+        return Response.ok(dtos).build();
+    }
+
 }

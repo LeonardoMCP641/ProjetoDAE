@@ -30,4 +30,14 @@ public class PublicationHistoryBean {
                 PublicationHistory.class
         ).getResultList();
     }
+    public List<PublicationHistory> getHistoryByEditorUserId(Long userId) {
+        return em.createQuery(
+                        "SELECT h FROM PublicationHistory h " +
+                                "WHERE h.editor.id = :uid " +
+                                "ORDER BY h.editedAt DESC",
+                        PublicationHistory.class
+                )
+                .setParameter("uid", userId)
+                .getResultList();
+    }
 }

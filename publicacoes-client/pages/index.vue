@@ -123,7 +123,7 @@
             </button>
             <div v-else class="flex justify-center gap-4">
               <NuxtLink to="/tags" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition">Gerir Tags</NuxtLink>
-              <NuxtLink to="/explore" class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition">Explorar Tudo</NuxtLink>
+              <NuxtLink to="/explorar" class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition">Explorar Tudo</NuxtLink>
             </div>
           </div>
 
@@ -160,7 +160,7 @@
             <div class="relative z-10">
               <h3 class="font-bold text-lg mb-2">Queres ver mais?</h3>
               <p class="text-indigo-100 text-sm mb-4">O teu feed é personalizado. Visita o Explorar para veres tudo.</p>
-              <NuxtLink to="/explore" class="block w-full text-center bg-white text-blue-600 hover:bg-blue-50 py-3 rounded-xl font-bold text-sm transition shadow-sm">
+              <NuxtLink to="/explorar" class="block w-full text-center bg-white text-blue-600 hover:bg-blue-50 py-3 rounded-xl font-bold text-sm transition shadow-sm">
                 Ir para Explorar 🌍
               </NuxtLink>
             </div>

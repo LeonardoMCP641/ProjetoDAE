@@ -90,6 +90,13 @@
                 >
                   <i class="bi bi-pencil-square"></i>
                 </NuxtLink>
+                <NuxtLink
+                    :to="`/users/history/${user.id}`"
+                    class="p-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+                    title="Histórico de alterações"
+                >
+                  <i class="bi bi-clock-history"></i>
+                </NuxtLink>
 
                 <button
                     @click="toggleActive(user)"
