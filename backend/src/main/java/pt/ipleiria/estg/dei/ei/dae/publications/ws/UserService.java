@@ -213,4 +213,5 @@ public class UserService {
 
         return Response.ok("Nova password enviada para o e-mail.").build();
     }
+
 }

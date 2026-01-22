@@ -114,7 +114,7 @@
             </button>
             <div v-else class="flex justify-center gap-4">
               <NuxtLink to="/tags" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition">Gerir Tags</NuxtLink>
-              <NuxtLink to="/explore" class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition">Explorar Tudo</NuxtLink>
+              <NuxtLink to="/explorar" class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition">Explorar Tudo</NuxtLink>
             </div>
           </div>
         </div>
