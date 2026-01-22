@@ -14,11 +14,7 @@
       <input v-model="area" class="form-control mb-2" placeholder="Área" />
       <input v-model="tipo" class="form-control mb-2" placeholder="Tipo" />
 
-      <textarea
-        v-model="resumoCurto"
-        class="form-control mb-2"
-        placeholder="Resumo Curto"
-      />
+      
 
       <div class="form-check mb-3">
         <input type="checkbox" class="form-check-input" id="visivel" v-model="visivel" />
@@ -33,13 +29,14 @@
     <div v-if="message" class="alert alert-info mt-3">{{ message }}</div>
   </div>
 </template>
-
 <script setup>
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '~/stores/auth-store'
 import { usePublicationStore } from '~/stores/publication-store'
+import { useRouter } from 'vue-router' 
 
+const router = useRouter() 
 const authStore = useAuthStore()
 const { token } = storeToRefs(authStore)
 
@@ -49,7 +46,7 @@ const autores = ref('')
 const area = ref('')
 const tipo = ref('')
 const resumoCurto = ref('')
-const visivel = ref(true) // ✅ Novo campo
+const visivel = ref(true)
 const file = ref(null)
 const message = ref('')
 
@@ -67,7 +64,7 @@ async function submit() {
         area: area.value,
         tipo: tipo.value,
         resumoCurto: resumoCurto.value,
-        visivel: visivel.value // ✅ Envia o valor do checkbox
+        visivel: visivel.value
       },
       token.value
     )
@@ -78,6 +75,11 @@ async function submit() {
     }
 
     message.value = 'Publicação submetida com sucesso!'
+
+    setTimeout(() => {
+      router.push('/')
+    }, 1500)
+
   } catch (error) {
     console.error(error)
     message.value = 'Erro ao submeter publicação.'
