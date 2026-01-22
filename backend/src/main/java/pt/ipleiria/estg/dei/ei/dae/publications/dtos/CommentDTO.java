@@ -12,25 +12,26 @@ public class CommentDTO implements Serializable {
     private String username;
     private String timestamp;
     private Long parentId;
-
     private List<CommentDTO> replies;
 
-    private boolean visible;
+    // TEM DE SER 'visivel' (Português) para bater certo com a Entidade
+    private boolean visivel;
 
     public CommentDTO() {
         this.replies = new ArrayList<>();
     }
 
-    public CommentDTO(Long id, String text, String username, String timestamp, Long parentId, boolean visible) {
+    public CommentDTO(Long id, String text, String username, String timestamp, Long parentId, boolean visivel) {
         this.id = id;
         this.text = text;
         this.username = username;
         this.timestamp = timestamp;
         this.parentId = parentId;
-        this.visible = visible;
+        this.visivel = visivel;
         this.replies = new ArrayList<>();
     }
 
+    // 1. Método para converter UM comentário
     public static CommentDTO from(Comment comment) {
         CommentDTO dto = new CommentDTO(
                 comment.getId(),
@@ -38,48 +39,36 @@ public class CommentDTO implements Serializable {
                 comment.getUser().getUsername(),
                 comment.getTimestamp() != null ? comment.getTimestamp().toString() : null,
                 comment.getParent() != null ? comment.getParent().getId() : null,
-                comment.isVisible()
+                comment.isVisivel()
         );
 
-        // Preenche a lista de respostas dentro deste DTO
         if (comment.getReplies() != null && !comment.getReplies().isEmpty()) {
-            List<CommentDTO> childrenDTOs = comment.getReplies().stream()
-                    .map(CommentDTO::from)
-                    .collect(Collectors.toList());
-            dto.setReplies(childrenDTOs);
+            dto.setReplies(comment.getReplies().stream().map(CommentDTO::from).collect(Collectors.toList()));
         }
-
         return dto;
     }
 
+    // 2. Método para converter UMA LISTA de comentários (É ESTE QUE ESTAVA A FALTAR/DAR ERRO)
     public static List<CommentDTO> from(List<Comment> comments) {
         return comments.stream()
-                // FILTRO MÁGICO: Só aceitamos comentários que NÃO tenham pai (Raiz)
-                .filter(c -> c.getParent() == null)
+                .filter(c -> c.getParent() == null) // Apenas comentários raiz
                 .map(CommentDTO::from)
                 .collect(Collectors.toList());
     }
 
-    // --- Getters e Setters ---
-
+    // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
     public String getText() { return text; }
     public void setText(String text) { this.text = text; }
-
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
-
     public String getTimestamp() { return timestamp; }
     public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
-
     public Long getParentId() { return parentId; }
     public void setParentId(Long parentId) { this.parentId = parentId; }
-
-    public boolean isVisible() { return visible; }
-    public void setVisible(boolean visible) { this.visible = visible; }
-
+    public boolean isVisivel() { return visivel; }
+    public void setVisivel(boolean visivel) { this.visivel = visivel; }
     public List<CommentDTO> getReplies() { return replies; }
     public void setReplies(List<CommentDTO> replies) { this.replies = replies; }
 }

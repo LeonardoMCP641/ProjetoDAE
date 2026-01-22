@@ -21,13 +21,11 @@ public class PublicationDTO {
     private double ratingAverage;
     private int ratingCount;
 
-    // 👇 MUDANÇA: Agora é uma lista de Strings (nomes das tags) e não TagDTO
     private List<String> tags = new ArrayList<>();
 
     private List<CommentDTO> comments = new ArrayList<>();
 
     public PublicationDTO() {
-        // Inicializar listas para evitar NullPointerException
         this.autores = new ArrayList<>();
         this.tags = new ArrayList<>();
         this.comments = new ArrayList<>();

@@ -72,11 +72,16 @@
               v-model="tagInput"
               @keydown.enter.prevent="addTagFromInput"
               type="text"
-              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none transition"
+              class="w-full px-4 py-3 rounded-xl border outline-none transition"
+              :class="showTagError ? 'border-red-500 bg-red-50' : 'border-gray-300 focus:ring-2 focus:ring-blue-500'"
               placeholder="Escreve para pesquisar ou criar tag..."
               autocomplete="off"
           >
-          <p class="text-xs text-gray-400 mt-1">Seleciona da lista ou pressiona Enter para criar nova.</p>
+
+          <p v-if="showTagError" class="text-xs text-red-500 font-bold mt-1">
+            <i class="bi bi-exclamation-circle-fill"></i> Tens de adicionar pelo menos uma tag à lista!
+          </p>
+          <p v-else class="text-xs text-gray-400 mt-1">Seleciona da lista ou pressiona Enter para criar nova.</p>
 
           <div v-if="filteredTags.length > 0 && tagInput" class="absolute z-10 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-1 max-h-48 overflow-y-auto">
             <ul>
@@ -84,14 +89,14 @@
                   v-for="tag in filteredTags"
                   :key="tag.id"
                   @click="selectTag(tag.name)"
-                  class="px-4 py-2 hover:bg-blue-50 cursor-pointer text-gray-700 text-sm font-medium flex justify-between items-center"
+                  class="px-4 py-2 hover:bg-blue-50 cursor-pointer text-gray-700 text-sm font-medium flex justify-between items-center transition"
               >
                 <span>#{{ tag.name }}</span>
-                <span class="text-xs text-gray-400">{{ tag.usageCount || 0 }} seguidores</span>
               </li>
             </ul>
           </div>
         </div>
+
         <div class="mb-6">
           <label class="block text-gray-700 text-sm font-bold mb-2">
             Tipo de Publicação <span class="text-red-500">*</span>
@@ -206,6 +211,7 @@ const tags = ref([]);
 const tagInput = ref('');
 const availableTags = ref([]);
 const selectedFile = ref(null);
+const showTagError = ref(false);
 
 onMounted(async () => {
   if (token.value) {
@@ -231,6 +237,7 @@ const filteredTags = computed(() => {
 function selectTag(tagName) {
   if (!tags.value.includes(tagName)) {
     tags.value.push(tagName);
+    showTagError.value = false;
   }
   tagInput.value = '';
 }
@@ -239,6 +246,7 @@ function addTagFromInput() {
   const val = tagInput.value.trim();
   if (val && !tags.value.includes(val)) {
     tags.value.push(val);
+    showTagError.value = false;
   }
   tagInput.value = '';
 }
@@ -255,6 +263,11 @@ function handleFileChange(event) {
 }
 
 async function submitPublication() {
+  if (tags.value.length === 0) {
+    showTagError.value = true;
+    return;
+  }
+
   try {
     const autoresList = form.value.autores.split(',').map(a => a.trim()).filter(a => a);
 

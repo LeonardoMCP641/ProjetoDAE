@@ -47,15 +47,19 @@ public class PublicationService {
 
     @GET
     @Path("/")
-    public List<PublicationDTO> getAllPublications(
+    public List<PublicationDTO> getAllPublications() {
+        return PublicationDTO.from(publicationBean.listAll());
+    }
+
+    @GET
+    @Path("/pesquisa")
+    public List<PublicationDTO> searchPublications(
             @QueryParam("q") String query,
             @QueryParam("area") String area,
-            @QueryParam("tipo") String tipo
+            @QueryParam("tipo") String tipo,
+            @QueryParam("sortBy") String sortBy
     ) {
-        if ((query != null && !query.isEmpty()) || (area != null && !area.isEmpty()) || (tipo != null && !tipo.isEmpty())) {
-            return PublicationDTO.from(publicationBean.search(query, area, tipo));
-        }
-        return PublicationDTO.from(publicationBean.listAll());
+        return PublicationDTO.from(publicationBean.search(query, area, tipo, sortBy));
     }
 
     @GET
@@ -119,7 +123,7 @@ public class PublicationService {
         boolean isChefe = securityContext.isUserInRole("Administrador") || securityContext.isUserInRole("Responsavel");
 
         if (!isOwner && !isChefe) {
-            return Response.status(Response.Status.FORBIDDEN).entity("Apenas o dono ou moderadores podem apagar.").build();
+            return Response.status(Response.Status.FORBIDDEN).entity("Sem permissão.").build();
         }
 
         publicationBean.delete(id);
@@ -190,7 +194,6 @@ public class PublicationService {
                 .build();
     }
 
-
     @POST
     @Path("{id}/comentarios")
     public Response commentPublication(@PathParam("id") long publicationId, CommentDTO commentDTO) {
@@ -232,4 +235,18 @@ public class PublicationService {
         ratingBean.rate(publicationId, username, dto.getValue());
         return Response.ok().build();
     }
+
+    @PUT
+    @Path("comentarios/{id}/visibilidade")
+    @RolesAllowed({"Administrador", "Responsavel"})
+    public Response toggleCommentVisibility(@PathParam("id") long id) {
+        try {
+            boolean novoEstado = commentBean.toggleVisibility(id);
+            return Response.ok(novoEstado).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+
 }

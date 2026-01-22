@@ -4,29 +4,41 @@
     <div class="mb-10 text-center max-w-2xl mx-auto">
       <h2 class="text-3xl font-bold text-gray-800 mb-4">Explorar <span class="text-blue-600">Conhecimento</span> 🔭</h2>
       <p class="text-gray-500">
-        Navega por todo o arquivo científico do centro. Usa a pesquisa para encontrar tópicos específicos.
+        Navega por todo o arquivo científico do centro. Usa a pesquisa e a ordenação para encontrar os melhores conteúdos.
       </p>
     </div>
 
-    <div class="max-w-3xl mx-auto mb-12 relative group">
-      <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition">
-        <i class="bi bi-search text-xl"></i>
+    <div class="flex flex-col md:flex-row gap-4 mb-12">
+      <div class="relative flex-1 group">
+        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition">
+          <i class="bi bi-search text-xl"></i>
+        </div>
+        <input
+            v-model="searchQuery"
+            @input="pesquisar"
+            type="text"
+            class="block w-full pl-14 pr-6 py-5 bg-white border border-gray-200 rounded-full shadow-lg shadow-blue-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition text-lg"
+            placeholder="Pesquisar por título, autor, tag ou área..."
+        />
       </div>
-      <input
-          v-model="searchQuery"
-          type="text"
-          class="block w-full pl-14 pr-6 py-5 bg-white border border-gray-200 rounded-full shadow-lg shadow-blue-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition text-lg"
-          placeholder="Pesquisar por título, autor, tag ou área..."
-      />
+
+      <select
+          v-model="sortBy"
+          @change="pesquisar"
+          class="bg-white border border-gray-200 rounded-2xl px-6 py-4 shadow-lg shadow-blue-50 text-gray-700 font-bold focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none cursor-pointer transition"
+      >
+        <option value="date">📅 Mais Recentes</option>
+        <option value="popular">🔥 Mais Populares</option>
+        <option value="rating">⭐ Melhor Classificados</option>
+      </select>
     </div>
 
     <div v-if="loading" class="text-center py-20">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
     </div>
 
-    <div v-else-if="filteredPublications.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-      <div v-for="p in filteredPublications" :key="p.id" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full">
+    <div v-else-if="publications.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div v-for="p in publications" :key="p.id" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full">
 
         <div class="p-6 pb-0 flex justify-between items-start">
           <div class="flex gap-2">
@@ -61,14 +73,13 @@
             <span v-for="tag in p.tags.slice(0, 3)" :key="tag" class="text-[10px] text-gray-500 bg-gray-50 px-2 py-1 rounded border border-gray-100">
               #{{ tag }}
             </span>
-            <span v-if="p.tags.length > 3" class="text-[10px] text-gray-400 px-1">...</span>
           </div>
         </div>
 
         <div class="px-6 py-4 bg-gray-50/50 border-t border-gray-100 flex justify-between items-center">
           <div class="flex items-center">
             <div class="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-xs font-bold text-gray-600 shadow-sm mr-3">
-              {{ p.username.charAt(0).toUpperCase() }}
+              {{ p.username ? p.username.charAt(0).toUpperCase() : 'U' }}
             </div>
             <div class="text-xs">
               <p class="font-bold text-gray-700">{{ p.username }}</p>
@@ -97,33 +108,36 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useAuthStore } from "~/stores/auth-store.js";
-import { usePublicationStore } from "~/stores/publication-store";
 import { storeToRefs } from "pinia";
 
-const authStore = useAuthStore();
-const { token } = storeToRefs(authStore);
-const publicationStore = usePublicationStore();
+const config = useRuntimeConfig();
+const api = config.public.apiBase;
+const { token } = storeToRefs(useAuthStore());
+
+const publications = ref([]);
 const loading = ref(true);
 const searchQuery = ref('');
+const sortBy = ref('date');
 
-onMounted(async () => {
-  if (token.value) {
-    await publicationStore.fetchAll(token.value);
+async function pesquisar() {
+  loading.value = true;
+  try {
+    const data = await $fetch(`${api}/publicacoes/pesquisa`, {
+      headers: { Authorization: `Bearer ${token.value}` },
+      params: {
+        q: searchQuery.value,
+        sortBy: sortBy.value
+      }
+    });
+    publications.value = data.filter(p => p.visivel);
+  } catch (e) {
+    console.error("Erro no explorar", e);
+  } finally {
     loading.value = false;
   }
-});
+}
 
-const filteredPublications = computed(() => {
-  let pubs = publicationStore.publications.filter(p => p.visivel);
-  if (!searchQuery.value) return pubs;
-  const search = searchQuery.value.toLowerCase();
-  return pubs.filter(p =>
-      p.titulo.toLowerCase().includes(search) ||
-      p.area.toLowerCase().includes(search) ||
-      (p.tags && p.tags.some(t => t.toLowerCase().includes(search))) ||
-      (p.autores && p.autores.join(' ').toLowerCase().includes(search))
-  );
-});
+onMounted(pesquisar);
 </script>

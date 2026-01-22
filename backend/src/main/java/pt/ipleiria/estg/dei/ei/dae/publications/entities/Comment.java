@@ -10,10 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "comments")
 @NamedQueries({
-        @NamedQuery(
-                name = "getAllComments",
-                query = "SELECT c FROM Comment c ORDER BY c.timestamp DESC"
-        )
+        @NamedQuery(name = "getAllComments", query = "SELECT c FROM Comment c ORDER BY c.timestamp DESC")
 })
 public class Comment implements Serializable {
 
@@ -29,7 +26,7 @@ public class Comment implements Serializable {
     private Date timestamp;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_username")
     @NotNull
     private User user;
 
@@ -42,93 +39,50 @@ public class Comment implements Serializable {
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    private boolean visible;
+    // AQUI: Usamos sempre 'visivel' (Português)
+    private boolean visivel;
 
-    // Lista de Respostas (Filhos)
     @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Comment> replies;
 
     public Comment() {
         this.timestamp = new Date();
         this.replies = new ArrayList<>();
-        this.visible = true;
+        this.visivel = true; // Visível por defeito
     }
 
     public Comment(String text, User user, Publication publication, Comment parent) {
+        this();
         this.text = text;
         this.user = user;
         this.publication = publication;
         this.parent = parent;
-        this.timestamp = new Date();
-        this.replies = new ArrayList<>();
-        this.visible = true;
     }
 
-    // --- GETTERS E SETTERS ---
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public String getText() { return text; }
+    public void setText(String text) { this.text = text; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Date getTimestamp() { return timestamp; }
+    public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
 
-    public String getText() {
-        return text;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-    public void setText(String text) {
-        this.text = text;
-    }
+    public Publication getPublication() { return publication; }
+    public void setPublication(Publication publication) { this.publication = publication; }
 
-    public User getUser() {
-        return user;
-    }
+    public Comment getParent() { return parent; }
+    public void setParent(Comment parent) { this.parent = parent; }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public boolean isVisivel() { return visivel; }
+    public void setVisivel(boolean visivel) { this.visivel = visivel; }
 
-    public Publication getPublication() {
-        return publication;
-    }
-
-    public void setPublication(Publication publication) {
-        this.publication = publication;
-    }
-
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public Comment getParent() {
-        return parent;
-    }
-
-    public void setParent(Comment parent) {
-        this.parent = parent;
-    }
-
-    public List<Comment> getReplies() {
-        return replies;
-    }
-
-    public void setReplies(List<Comment> replies) {
-        this.replies = replies;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
+    public List<Comment> getReplies() { return replies; }
+    public void setReplies(List<Comment> replies) { this.replies = replies; }
 
     public void addReply(Comment reply) {
         if (!replies.contains(reply)) {
@@ -138,18 +92,7 @@ public class Comment implements Serializable {
     }
 
     public void removeReply(Comment reply) {
-        if (replies.contains(reply)) {
-            replies.remove(reply);
-            reply.setParent(null);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", text='" + text + '\'' +
-                ", author=" + (user != null ? user.getUsername() : "null") +
-                '}';
+        replies.remove(reply);
+        reply.setParent(null);
     }
 }

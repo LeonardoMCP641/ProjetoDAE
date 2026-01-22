@@ -6,10 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
-import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
-import pt.ipleiria.estg.dei.ei.dae.publications.entities.PublicationHistory;
-import pt.ipleiria.estg.dei.ei.dae.publications.entities.Tag;
-import pt.ipleiria.estg.dei.ei.dae.publications.entities.User;
+import pt.ipleiria.estg.dei.ei.dae.publications.entities.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +23,6 @@ public class PublicationBean {
     @Inject
     private NotificationBean notificationBean;
 
-    /**
-     * CRIAR PUBLICAÇÃO
-     * Combina a gestão de Tags (File 2) com as Notificações (File 1)
-     */
     public Publication create(PublicationDTO dto, User user) {
         Publication p = new Publication();
         p.setTitulo(dto.getTitulo());
@@ -41,20 +34,14 @@ public class PublicationBean {
         p.setFilepath(dto.getFilepath());
         p.setVisivel(dto.isVisivel());
 
-        // Garante que o user está gerido
         user = em.merge(user);
         p.setUser(user);
 
-        // Grava primeiro para ter ID
         em.persist(p);
 
-        // === 1. PROCESSAR AS TAGS (Lógica do Ficheiro 2) ===
-        // Transforma a lista de Strings (do DTO) em entidades Tag reais
         if (dto.getTags() != null && !dto.getTags().isEmpty()) {
             for (String tagName : dto.getTags()) {
                 String cleanName = tagName.trim();
-
-                // Procura se já existe (case insensitive)
                 List<Tag> tagsFound = em.createQuery(
                                 "SELECT t FROM Tag t WHERE LOWER(t.name) = LOWER(:name)", Tag.class)
                         .setParameter("name", cleanName.toLowerCase())
@@ -62,29 +49,22 @@ public class PublicationBean {
 
                 Tag tag;
                 if (tagsFound.isEmpty()) {
-                    // Se não existe, cria nova
                     tag = new Tag(cleanName);
                     em.persist(tag);
                 } else {
-                    // Se existe, usa a existente
                     tag = tagsFound.get(0);
                 }
-
                 p.addTag(tag);
             }
         }
 
-        // === 2. NOTIFICAÇÕES (Lógica do Ficheiro 1) ===
-        // Agora que as tags estão associadas, notificamos os subscritores
         if (p.getTags() != null && !p.getTags().isEmpty()) {
             for (Tag tag : p.getTags()) {
-                // Busca utilizadores que subscreveram esta tag
                 List<User> subscribers = em.createNamedQuery("getUsersBySubscribedTag", User.class)
                         .setParameter("tagId", tag.getId())
                         .getResultList();
 
                 for (User sub : subscribers) {
-                    // Não notificar o próprio autor da publicação
                     if (!sub.getUsername().equals(user.getUsername())) {
                         notificationBean.create(
                                 sub,
@@ -95,63 +75,39 @@ public class PublicationBean {
                 }
             }
         }
-
         return p;
     }
 
-    /**
-     * ATUALIZAR PUBLICAÇÃO
-     * Usa a lógica robusta do Ficheiro 1 (com Histórico)
-     */
     public Publication update(Publication updatedPublication, User editor) {
         Publication p = find(updatedPublication.getId());
-        if (p == null) {
-            throw new RuntimeException("Publicação não encontrada");
-        }
+        if (p == null) throw new RuntimeException("Publicação não encontrada");
 
         editor = em.merge(editor);
 
-        // --- Registo de Histórico ---
+        checkAndLog(p, editor, "titulo", p.getTitulo(), updatedPublication.getTitulo());
+        p.setTitulo(updatedPublication.getTitulo());
 
-        // Título
-        if (!p.getTitulo().equals(updatedPublication.getTitulo())) {
-            historyBean.create(new PublicationHistory(p, editor, "titulo", p.getTitulo(), updatedPublication.getTitulo()));
-            p.setTitulo(updatedPublication.getTitulo());
-        }
+        checkAndLog(p, editor, "resumoCurto", p.getResumoCurto(), updatedPublication.getResumoCurto());
+        p.setResumoCurto(updatedPublication.getResumoCurto());
 
-        // Resumo
-        if (!p.getResumoCurto().equals(updatedPublication.getResumoCurto())) {
-            historyBean.create(new PublicationHistory(p, editor, "resumoCurto", p.getResumoCurto(), updatedPublication.getResumoCurto()));
-            p.setResumoCurto(updatedPublication.getResumoCurto());
-        }
+        checkAndLog(p, editor, "area", p.getArea(), updatedPublication.getArea());
+        p.setArea(updatedPublication.getArea());
 
-        // Área
-        if (!p.getArea().equals(updatedPublication.getArea())) {
-            historyBean.create(new PublicationHistory(p, editor, "area", p.getArea(), updatedPublication.getArea()));
-            p.setArea(updatedPublication.getArea());
-        }
+        checkAndLog(p, editor, "tipo", p.getTipo(), updatedPublication.getTipo());
+        p.setTipo(updatedPublication.getTipo());
 
-        // Tipo
-        if (!p.getTipo().equals(updatedPublication.getTipo())) {
-            historyBean.create(new PublicationHistory(p, editor, "tipo", p.getTipo(), updatedPublication.getTipo()));
-            p.setTipo(updatedPublication.getTipo());
-        }
-
-        // Visibilidade
         if (p.isVisivel() != updatedPublication.isVisivel()) {
             historyBean.create(new PublicationHistory(p, editor, "visivel",
                     String.valueOf(p.isVisivel()), String.valueOf(updatedPublication.isVisivel())));
             p.setVisivel(updatedPublication.isVisivel());
         }
 
-        // Filename
         if ((p.getFilename() == null && updatedPublication.getFilename() != null) ||
                 (p.getFilename() != null && !p.getFilename().equals(updatedPublication.getFilename()))) {
             historyBean.create(new PublicationHistory(p, editor, "filename", p.getFilename(), updatedPublication.getFilename()));
             p.setFilename(updatedPublication.getFilename());
         }
 
-        // Autores
         if (!p.getAutores().equals(updatedPublication.getAutores())) {
             String oldAutores = String.join(", ", p.getAutores());
             String newAutores = String.join(", ", updatedPublication.getAutores());
@@ -159,7 +115,6 @@ public class PublicationBean {
             p.setAutores(updatedPublication.getAutores());
         }
 
-        // Filepath
         if ((p.getFilepath() == null && updatedPublication.getFilepath() != null) ||
                 (p.getFilepath() != null && !p.getFilepath().equals(updatedPublication.getFilepath()))) {
             historyBean.create(new PublicationHistory(p, editor, "filepath", p.getFilepath(), updatedPublication.getFilepath()));
@@ -169,7 +124,11 @@ public class PublicationBean {
         return em.merge(p);
     }
 
-    // --- MÉTODOS DE LEITURA E PESQUISA ---
+    private void checkAndLog(Publication p, User editor, String field, String oldVal, String newVal) {
+        if (oldVal != null && !oldVal.equals(newVal)) {
+            historyBean.create(new PublicationHistory(p, editor, field, oldVal, newVal));
+        }
+    }
 
     public List<Publication> listAll() {
         return em.createNamedQuery("getAllPublications", Publication.class).getResultList();
@@ -185,59 +144,67 @@ public class PublicationBean {
                 .getResultList();
     }
 
-    /** Pesquisa Avançada (do Ficheiro 1) */
-    public List<Publication> search(String query, String area, String tipo) {
+    public List<Publication> search(String query, String area, String tipo, String sortBy) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Publication> cq = cb.createQuery(Publication.class);
         Root<Publication> p = cq.from(Publication.class);
         List<Predicate> predicates = new ArrayList<>();
 
-        if (query != null && !query.isEmpty()) {
+        if (query != null && !query.trim().isEmpty()) {
             String pattern = "%" + query.toLowerCase() + "%";
+
+            // 🌟 Mágica: Pesquisa de tags sem criar duplicados!
+            Subquery<Long> tagSub = cq.subquery(Long.class);
+            Root<Publication> subRoot = tagSub.from(Publication.class);
+            Join<Publication, Tag> subTags = subRoot.join("tags");
+            tagSub.select(subRoot.get("id"));
+            tagSub.where(cb.like(cb.lower(subTags.get("name")), pattern));
+
             predicates.add(cb.or(
                     cb.like(cb.lower(p.get("titulo")), pattern),
                     cb.like(cb.lower(p.get("resumoCurto")), pattern),
-                    cb.like(cb.lower(p.get("area")), pattern)
+                    cb.like(cb.lower(p.get("area")), pattern),
+                    p.get("id").in(tagSub) // Se o ID estiver na lista de publicações com essa tag
             ));
         }
 
-        if (area != null && !area.isEmpty()) {
-            predicates.add(cb.equal(p.get("area"), area));
-        }
-        if (tipo != null && !tipo.isEmpty()) {
-            predicates.add(cb.equal(p.get("tipo"), tipo));
+        if (area != null && !area.trim().isEmpty()) predicates.add(cb.equal(p.get("area"), area));
+        if (tipo != null && !tipo.trim().isEmpty()) predicates.add(cb.equal(p.get("tipo"), tipo));
+
+        if (!predicates.isEmpty()) {
+            cq.where(cb.and(predicates.toArray(new Predicate[0])));
         }
 
-        cq.where(predicates.toArray(new Predicate[0]));
-        cq.orderBy(cb.desc(p.get("publicationDate"))); // Assumindo que tens este campo, senão usa ID
+        // 🚀 IMPORTANTE: Removemos o cq.distinct(true) para não dar erro na ordenação!
+
+        if ("popular".equals(sortBy)) {
+            Subquery<Long> sub = cq.subquery(Long.class);
+            Root<pt.ipleiria.estg.dei.ei.dae.publications.entities.Comment> c = sub.from(pt.ipleiria.estg.dei.ei.dae.publications.entities.Comment.class);
+            sub.select(cb.count(c));
+            sub.where(cb.equal(c.get("publication"), p));
+            cq.orderBy(cb.desc(sub));
+        } else if ("rating".equals(sortBy)) {
+            cq.orderBy(cb.desc(p.get("ratingAverage")));
+        } else {
+            cq.orderBy(cb.desc(p.get("publicationDate")));
+        }
 
         return em.createQuery(cq).getResultList();
     }
-
-    // --- MÉTODOS DE GESTÃO E ASSOCIAÇÃO ---
-
     public void delete(long id) {
         Publication p = find(id);
-        if (p != null) {
-            em.remove(p);
-        }
+        if (p != null) em.remove(p);
     }
 
     public void associarTag(long publicationId, long tagId) {
-        Publication publication = find(publicationId);
-        Tag tag = em.find(Tag.class, tagId);
-        if (publication != null && tag != null) {
-            publication.addTag(tag);
-            em.merge(publication);
-        }
+        Publication p = find(publicationId);
+        Tag t = em.find(Tag.class, tagId);
+        if (p != null && t != null) { p.addTag(t); em.merge(p); }
     }
 
     public void desassociarTag(long publicationId, long tagId) {
-        Publication publication = find(publicationId);
-        Tag tag = em.find(Tag.class, tagId);
-        if (publication != null && tag != null) {
-            publication.removeTag(tag);
-            em.merge(publication);
-        }
+        Publication p = find(publicationId);
+        Tag t = em.find(Tag.class, tagId);
+        if (p != null && t != null) { p.removeTag(t); em.merge(p); }
     }
 }

@@ -7,9 +7,8 @@
       <div class="relative z-10">
         <div class="flex justify-between items-start mb-6">
           <div class="flex gap-2">
-            <span class="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-white/20 backdrop-blur-md border border-white/10 shadow-sm">{{ publication.area }}</span>
-            <span class="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-blue-500/30 backdrop-blur-md border border-white/10 shadow-sm">{{ publication.tipo }}</span>
-
+            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-white/20 backdrop-blur-md border border-white/10 shadow-sm">{{ publication.area }}</span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-blue-500/30 backdrop-blur-md border border-white/10 shadow-sm">{{ publication.tipo }}</span>
             <span class="px-3 py-1 rounded-full text-xs font-bold uppercase border border-white/10"
                   :class="publication.visivel ? 'bg-emerald-500/20 text-emerald-100' : 'bg-rose-500/20 text-rose-100'">
               <i class="bi" :class="publication.visivel ? 'bi-globe' : 'bi-lock-fill'"></i>
@@ -21,6 +20,9 @@
             <button v-if="isOwner" @click="goToEdit" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition backdrop-blur-md text-white" title="Editar">
               <i class="bi bi-pencil-fill text-sm"></i>
             </button>
+            <button v-if="canManage" @click="toggleVisibility" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition backdrop-blur-md text-white" :title="publication.visivel ? 'Ocultar' : 'Mostrar'">
+              <i class="bi" :class="publication.visivel ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+            </button>
             <button v-if="canManage" @click="deletePublication" class="w-8 h-8 rounded-full bg-red-500/20 hover:bg-red-500/40 text-red-200 flex items-center justify-center transition backdrop-blur-md" title="Apagar">
               <i class="bi bi-trash-fill text-sm"></i>
             </button>
@@ -28,7 +30,6 @@
         </div>
 
         <h1 class="text-3xl md:text-5xl font-bold leading-tight mb-2 tracking-tight">{{ publication.titulo }}</h1>
-
         <p class="text-blue-200 text-sm mt-2 opacity-80 flex items-center">
           <i class="bi bi-calendar-event mr-2"></i>
           {{ publication.publicationDate ? new Date(publication.publicationDate).toLocaleDateString() : 'Data desconhecida' }}
@@ -37,10 +38,9 @@
     </div>
 
     <div class="bg-white rounded-b-3xl shadow-xl border-x border-b border-gray-100 p-8 md:p-10 -mt-4 relative z-20">
-
       <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-100 pb-6 mb-8 gap-4">
         <div class="flex items-center gap-4">
-          <div class="w-14 h-14 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 flex items-center justify-center text-blue-600 font-bold text-xl shadow-inner border-2 border-white">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 flex items-center justify-center text-blue-600 font-bold text-xl shadow-inner border-2 border-white ring-2 ring-gray-50">
             {{ publication.username.charAt(0).toUpperCase() }}
           </div>
           <div>
@@ -87,7 +87,6 @@
       <div v-else class="w-full py-4 bg-gray-50 border border-dashed border-gray-300 rounded-xl text-center text-gray-400 text-sm">
         Sem ficheiro disponível
       </div>
-
     </div>
 
     <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -113,28 +112,63 @@
             </div>
 
             <div v-else v-for="comment in publication.comments" :key="comment.id" class="group">
-              <div class="flex gap-3">
+
+              <div v-if="!comment.visivel && !isChefe" class="bg-gray-50 p-4 rounded-2xl italic text-gray-400 text-sm mb-4 border border-gray-100">
+                <i class="bi bi-eye-slash-fill mr-2"></i> Comentário ocultado pela moderação.
+              </div>
+
+              <div v-else class="flex gap-3 mb-4" :class="!comment.visivel ? 'opacity-70' : ''">
                 <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600 flex-shrink-0">
                   {{ comment.username.charAt(0).toUpperCase() }}
                 </div>
                 <div class="flex-1">
-                  <div class="bg-gray-50 p-4 rounded-2xl rounded-tl-none relative">
-                    <span class="font-bold text-sm text-gray-900 block mb-1">{{ comment.username }}</span>
-                    <p class="text-gray-600 text-sm">{{ comment.text }}</p>
+                  <div class="bg-gray-50 p-4 rounded-2xl rounded-tl-none relative border"
+                       :class="!comment.visivel ? 'border-red-200 bg-red-50' : 'border-gray-100'">
+
+                    <div class="flex justify-between items-start mb-1">
+                      <span class="font-bold text-sm text-gray-900">{{ comment.username }}</span>
+
+                      <button v-if="isChefe" @click="toggleCommentVisibility(comment.id)"
+                              class="text-gray-400 hover:text-blue-600 transition"
+                              :title="comment.visivel ? 'Ocultar comentário' : 'Mostrar comentário'">
+                        <i class="bi" :class="comment.visivel ? 'bi-eye-slash' : 'bi-eye-fill'"></i>
+                      </button>
+                    </div>
+
+                    <p class="text-gray-600 text-sm">
+                      <span v-if="!comment.visivel" class="text-red-500 font-bold text-xs uppercase mr-1">[Oculto]</span>
+                      {{ comment.text }}
+                    </p>
                     <button @click="toggleReplyBox(comment.id)" class="text-xs font-bold text-blue-500 mt-2 hover:underline">Responder</button>
                   </div>
 
                   <div v-if="activeReplyId === comment.id" class="mt-2 ml-2 animate-fadeIn">
                     <form @submit.prevent="submitReply(comment.id)" class="flex gap-2">
-                      <input v-model="replyText" class="flex-1 border rounded-lg px-2 text-sm" placeholder="Resposta..." autoFocus />
+                      <input v-model="replyText" class="flex-1 border rounded-lg px-2 text-sm py-1" placeholder="Escreve uma resposta..." autoFocus />
                       <button type="submit" class="text-blue-600 text-sm font-bold">Enviar</button>
                     </form>
                   </div>
 
                   <div v-if="comment.replies && comment.replies.length > 0" class="mt-2 pl-4 border-l-2 border-gray-100 space-y-2">
-                    <div v-for="reply in comment.replies" :key="reply.id" class="bg-white border border-gray-100 p-3 rounded-xl">
-                      <span class="font-bold text-xs block">{{ reply.username }}</span>
-                      <p class="text-gray-500 text-xs">{{ reply.text }}</p>
+                    <div v-for="reply in comment.replies" :key="reply.id" class="bg-white border border-gray-100 p-3 rounded-xl relative group-reply">
+
+                      <div v-if="!reply.visivel && !isChefe" class="italic text-gray-400 text-xs">
+                        <i class="bi bi-eye-slash mr-1"></i> Resposta ocultada.
+                      </div>
+
+                      <div v-else :class="!reply.visivel ? 'opacity-60 bg-red-50' : ''">
+                        <div class="flex justify-between items-start">
+                          <span class="font-bold text-xs block text-gray-800">{{ reply.username }}</span>
+                          <button v-if="isChefe" @click="toggleCommentVisibility(reply.id)" class="text-gray-300 hover:text-blue-600 text-xs">
+                            <i class="bi" :class="reply.visivel ? 'bi-eye-slash' : 'bi-eye-fill'"></i>
+                          </button>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-1">
+                          <span v-if="!reply.visivel" class="text-red-500 font-bold">[Oculto]</span>
+                          {{ reply.text }}
+                        </p>
+                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -172,12 +206,12 @@ const replyText = ref("");
 const activeReplyId = ref(null);
 const myRating = ref(0);
 
+// PERMISSÕES 🛡️
 const isOwner = computed(() => user.value && publication.value && user.value.username === publication.value.username);
-
-const canManage = computed(() => {
-  if (!user.value || !publication.value) return false;
-  return isOwner.value || user.value.role === 'Administrador' || user.value.role === 'Responsavel';
-});
+// "Chefe" = Admin ou Responsável (para moderação global)
+const isChefe = computed(() => user.value && (user.value.role === 'Administrador' || user.value.role === 'Responsavel'));
+// Gestão da Página = Dono ou Chefe
+const canManage = computed(() => isOwner.value || isChefe.value);
 
 async function fetchPublication() {
   try {
@@ -193,6 +227,36 @@ onMounted(async () => {
   if (!user.value) await authStore.fetchUser();
   fetchPublication();
 });
+
+// 👁️ MODERAÇÃO DE COMENTÁRIOS
+async function toggleCommentVisibility(commentId) {
+  if (!confirm("Alterar a visibilidade deste comentário?")) return;
+  try {
+    await $fetch(`${api}/publicacoes/comentarios/${commentId}/visibilidade`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token.value}` }
+    });
+    await fetchPublication(); // Recarrega para ver a mudança
+  } catch (e) { alert("Erro ao moderar comentário."); }
+}
+
+// 👁️ MODERAÇÃO DA PUBLICAÇÃO
+async function toggleVisibility() {
+  const novoEstado = !publication.value.visivel;
+  const acao = novoEstado ? "tornar visível" : "ocultar";
+  if (!confirm(`Queres ${acao} esta publicação?`)) return;
+
+  try {
+    const payload = { ...publication.value, visivel: novoEstado };
+    await $fetch(`${api}/publicacoes/${publication.value.id}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token.value}` },
+      body: payload
+    });
+    publication.value.visivel = novoEstado;
+    alert(`Publicação ${novoEstado ? 'visível' : 'oculta'}!`);
+  } catch (e) { alert("Erro ao alterar visibilidade."); }
+}
 
 async function submitRating(value) {
   try {
@@ -253,7 +317,7 @@ async function downloadPdf() {
 }
 
 async function deletePublication() {
-  if (!confirm("Apagar publicação? Esta ação é irreversível.")) return;
+  if (!confirm("Apagar publicação permanentemente?")) return;
   try {
     await $fetch(`${api}/publicacoes/${publication.value.id}`, {
       method: "DELETE",
