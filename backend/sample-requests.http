@@ -52,23 +52,24 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxM
 ### Criar uma Nova Publicação
 POST http://localhost:8080/publicacoescientificas/api/publicacoes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2OTAyNTY1NiwiZXhwIjoxNzY5MDI5MjU2fQ.PxMD2-BVNiZKyHYF140fEf17m96J3eC70k7049c5oZU_o8Lj1gImFFEezEKOxyB6
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0MTIzOCwiZXhwIjoxNzY4OTQ0ODM4fQ.YNy3ERBZbQ713SJ7UaCIiTEUUEq0qaCIhNwhUzE7ab94h1xwuIJixDzYww8VHTI0
 
 {
   "titulo": "Deep Learning para Totós",
   "autores": ["Matilde", "João"],
   "area": "Inteligência Artificial",
   "tipo": "Artigo",
-  "resumoCurto": "Um guia muito simples.",
+  "resumoCurto": "",
   "visivel": true
 }
 
 ### Listar TODAS as Publicações
 GET http://localhost:8080/publicacoescientificas/api/publicacoes
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2OTAyNTY1NiwiZXhwIjoxNzY5MDI5MjU2fQ.PxMD2-BVNiZKyHYF140fEf17m96J3eC70k7049c5oZU_o8Lj1gImFFEezEKOxyB6
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+
 ### Ver Detalhes da Publicação 1
-GET http://localhost:8080/publicacoescientificas/api/publicacoes/1
+GET http://localhost:8080/publicacoescientificas/api/publicacoes/2
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
 
@@ -82,7 +83,7 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0M
   "autores": ["Matilde", "João", "Ana"],
   "area": "Inteligência Artificial",
   "tipo": "Artigo",
-  "resumoCurto": "Versão atualizada.",
+  "resumoCurto": "",
   "visivel": true
 }
 
@@ -110,12 +111,12 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxM
 ### Upload de Ficheiro (Simulação)
 # Nota: O IntelliJ HTTP Client precisa que o ficheiro "teste.pdf" exista na pasta do projeto
 # Ou então cria um ficheiro de texto simples para testar.
-POST http://localhost:8080/publicacoescientificas/api/publicacoes/1/upload
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxMzY5MCwiZXhwIjoxNzY4OTE3MjkwfQ.WY5IC-x0w-z7mG-HFcFg6PkG9r9ZuXYesjP75pzq87fqsudzoVHP-Eophcr7cOtF
+POST http://localhost:8080/publicacoescientificas/api/publicacoes/6/upload
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk1MzA0MiwiZXhwIjoxNzY4OTU2NjQyfQ.6qyzlPJ47-ccd2jCQBgK_OCs9CRYJdTq22gcb8jtw-sA90TGPNixH3RW_53-35U5
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="meu_artigo.txt"
+Content-Disposition: form-data; name="file"; filename="meu_artigo.pdf"
 Content-Type: text/plain
 
 Isto é o conteúdo do ficheiro de teste da Matilde.

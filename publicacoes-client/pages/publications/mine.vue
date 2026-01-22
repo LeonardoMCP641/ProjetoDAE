@@ -2,11 +2,12 @@
   <div>
     <div class="mb-8">
       <h2 class="text-2xl font-bold text-gray-800">Os Meus Uploads</h2>
-      <p class="text-gray-500">Gere as tuas submissões e verifica o estado de visibilidade.</p>
+      <p class="text-gray-500">Gere as tuas submissões, verifica o histórico e o estado de visibilidade.</p>
     </div>
 
     <div v-if="loading" class="text-center py-20 text-gray-400">
-      <p>A carregar...</p>
+      <div class="spinner-border text-blue-600 mb-2" role="status"></div>
+      <p>A carregar as tuas publicações...</p>
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -25,13 +26,25 @@
         <p class="text-sm text-gray-500 mb-4 line-clamp-2">{{ p.resumoCurto }}</p>
 
         <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-50">
-          <span class="text-xs text-gray-400 font-semibold">{{ p.area }}</span>
+          <span class="text-xs text-gray-400 font-semibold uppercase">{{ p.area }}</span>
 
-          <div class="flex gap-2">
-            <NuxtLink :to="`/publications/edit/${p.id}`" class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition">
+          <div class="flex gap-1">
+
+            <NuxtLink :to="`/publications/history?id=${p.id}`"
+                      class="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition"
+                      title="Ver Histórico">
+              <i class="bi bi-clock-history"></i>
+            </NuxtLink>
+
+            <NuxtLink :to="`/publications/edit/${p.id}`"
+                      class="p-2 text-gray-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition"
+                      title="Editar">
               <i class="bi bi-pencil"></i>
             </NuxtLink>
-            <NuxtLink :to="`/publications/${p.id}`" class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition">
+
+            <NuxtLink :to="`/publications/${p.id}`"
+                      class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                      title="Ver Detalhes">
               <i class="bi bi-eye"></i>
             </NuxtLink>
           </div>
@@ -65,13 +78,18 @@ const loading = ref(true)
 
 onMounted(async () => {
   if (!token.value) return
+
+  // Garante que temos o user carregado
   if (!user.value) await authStore.fetchUser()
 
+  // Busca todas as publicações
   await publicationStore.fetchAll(token.value)
 
+  // Filtra apenas as minhas
   myPublications.value = publicationStore.publications.filter(
       pub => pub.username === user.value.username
   )
+
   loading.value = false
 })
 </script>
