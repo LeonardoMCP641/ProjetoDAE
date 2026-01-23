@@ -120,16 +120,74 @@
           </div>
         </div>
 
+        <!-- SECÇÃO DO RESUMO COM IA -->
         <div class="mb-8">
-          <label class="block text-gray-700 text-sm font-bold mb-2">
-            Resumo Curto
-          </label>
-          <textarea
-              v-model="form.resumo"
-              rows="4"
-              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
-              placeholder="Escreve um breve resumo do trabalho..."
-          ></textarea>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-gray-700 text-sm font-bold">
+              Resumo Curto <span class="text-gray-400 text-xs font-normal">(opcional)</span>
+            </label>
+            
+            <button
+                v-if="canGenerateAI"
+                type="button"
+                @click="generateAISummary"
+                :disabled="isGenerating"
+                class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all"
+                :class="isGenerating 
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                  : 'bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600 shadow-md hover:shadow-lg transform hover:-translate-y-0.5'"
+            >
+              <i class="bi" :class="isGenerating ? 'bi-hourglass-split animate-spin' : 'bi-stars'"></i>
+              {{ isGenerating ? 'A gerar com IA...' : 'Gerar com IA' }}
+            </button>
+          </div>
+
+          <!-- Mensagem informativa -->
+          <div v-if="!canGenerateAI && !form.resumo" class="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p class="text-xs text-blue-700 flex items-center gap-2">
+              <i class="bi bi-info-circle-fill"></i>
+              <span>Preenche o <strong>título</strong>, <strong>autores</strong>, <strong>área</strong> e <strong>tipo</strong> para gerar o resumo automaticamente com IA, ou deixa em branco para gerar ao submeter</span>
+            </p>
+          </div>
+
+          <!-- Alert de sucesso -->
+          <div v-if="aiGeneratedSuccess" class="mb-3 p-3 bg-green-50 border border-green-200 rounded-lg animate-fadeIn">
+            <p class="text-xs text-green-700 flex items-center gap-2">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Resumo gerado com sucesso usando <strong>llama2</strong>! Podes editá-lo se quiseres.</span>
+            </p>
+          </div>
+
+          <!-- Alert de erro -->
+          <div v-if="aiGeneratedError" class="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg animate-fadeIn">
+            <p class="text-xs text-red-700 flex items-center gap-2">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+              <span>{{ aiGeneratedError }}</span>
+            </p>
+          </div>
+
+          <div class="relative">
+            <textarea
+                v-model="form.resumo"
+                rows="6"
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
+                :class="{ 'bg-purple-50 border-purple-300': isGenerating }"
+                placeholder="Escreve um breve resumo do trabalho ou deixa em branco para gerar automaticamente com IA..."
+                :disabled="isGenerating"
+            ></textarea>
+            
+            <!-- Indicador de loading -->
+            <div v-if="isGenerating" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 rounded-xl">
+              <div class="flex flex-col items-center gap-2">
+                <div class="w-8 h-8 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+                <p class="text-xs text-gray-600 font-bold">A criar resumo...</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-xs text-gray-400 mt-2">
+            <i class="bi bi-lightbulb"></i> Dica: Se não escreveres nada, o resumo será gerado automaticamente ao submeter.
+          </p>
         </div>
 
         <div class="mb-8 p-6 bg-gray-50 border border-dashed border-gray-300 rounded-xl hover:bg-gray-100 transition relative">
@@ -175,9 +233,13 @@
           </NuxtLink>
           <button
               type="submit"
-              class="px-8 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 transition"
+              :disabled="isGenerating"
+              class="px-8 py-3 rounded-xl bg-blue-600 text-white font-bold shadow-lg shadow-blue-200 transition"
+              :class="isGenerating 
+                ? 'opacity-50 cursor-not-allowed' 
+                : 'hover:bg-blue-700 transform hover:-translate-y-0.5'"
           >
-            Submeter Publicação
+            {{ isGenerating ? 'Aguarda...' : 'Submeter Publicação' }}
           </button>
         </div>
 
@@ -213,6 +275,11 @@ const availableTags = ref([]);
 const selectedFile = ref(null);
 const showTagError = ref(false);
 
+// Estados para IA
+const isGenerating = ref(false);
+const aiGeneratedSuccess = ref(false);
+const aiGeneratedError = ref(null);
+
 onMounted(async () => {
   if (token.value) {
     try {
@@ -222,6 +289,14 @@ onMounted(async () => {
       availableTags.value = data;
     } catch (e) { console.error("Erro a carregar tags", e); }
   }
+});
+
+// Verifica se pode gerar resumo com IA (todos os campos necessários preenchidos)
+const canGenerateAI = computed(() => {
+  return form.value.titulo.trim() !== '' &&
+         form.value.autores.trim() !== '' &&
+         form.value.area.trim() !== '' &&
+         form.value.tipo !== '';
 });
 
 const filteredTags = computed(() => {
@@ -262,10 +337,68 @@ function handleFileChange(event) {
   }
 }
 
+// FUNÇÃO PARA GERAR RESUMO COM IA
+async function generateAISummary() {
+  if (!canGenerateAI.value) return;
+
+  isGenerating.value = true;
+  aiGeneratedSuccess.value = false;
+  aiGeneratedError.value = null;
+
+  try {
+    const autoresList = form.value.autores.split(',').map(a => a.trim()).filter(a => a);
+
+    const payload = {
+      titulo: form.value.titulo,
+      autores: autoresList,
+      area: form.value.area,
+      tipo: form.value.tipo
+    };
+
+    // Chama o endpoint /gerar-resumo
+    const resumo = await $fetch(`${api}/publicacoes/gerar-resumo`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token.value}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    // O resumo vem como texto puro (String)
+    form.value.resumo = resumo;
+    aiGeneratedSuccess.value = true;
+
+    // Remove mensagem de sucesso após 5 segundos
+    setTimeout(() => {
+      aiGeneratedSuccess.value = false;
+    }, 5000);
+
+  } catch (e) {
+    console.error('Erro ao gerar resumo:', e);
+    aiGeneratedError.value = 'Erro ao gerar resumo com IA. Tenta novamente ou escreve manualmente.';
+    
+    setTimeout(() => {
+      aiGeneratedError.value = null;
+    }, 5000);
+  } finally {
+    isGenerating.value = false;
+  }
+}
+
 async function submitPublication() {
   if (tags.value.length === 0) {
     showTagError.value = true;
     return;
+  }
+
+  // Se o resumo está vazio, mostra loading de IA
+  const willGenerateAI = !form.value.resumo || form.value.resumo.trim() === '';
+  
+  if (willGenerateAI) {
+    isGenerating.value = true;
+    aiGeneratedSuccess.value = false;
+    aiGeneratedError.value = null;
   }
 
   try {
@@ -276,7 +409,7 @@ async function submitPublication() {
       autores: autoresList,
       area: form.value.area,
       tipo: form.value.tipo,
-      resumoCurto: form.value.resumo,
+      resumoCurto: form.value.resumo, // Se vazio, backend gera automaticamente
       visivel: form.value.visivel,
       tags: tags.value
     };
@@ -301,10 +434,12 @@ async function submitPublication() {
       });
     }
 
+    isGenerating.value = false;
     router.push('/');
 
   } catch (e) {
     console.error(e);
+    isGenerating.value = false;
     alert("Erro ao criar publicação. Verifica os campos.");
   }
 }
@@ -317,5 +452,12 @@ async function submitPublication() {
 }
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 </style>

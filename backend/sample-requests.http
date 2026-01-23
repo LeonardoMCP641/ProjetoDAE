@@ -52,7 +52,7 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODkxM
 ### Criar uma Nova Publicação
 POST http://localhost:8080/publicacoescientificas/api/publicacoes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2ODk0MTIzOCwiZXhwIjoxNzY4OTQ0ODM4fQ.YNy3ERBZbQ713SJ7UaCIiTEUUEq0qaCIhNwhUzE7ab94h1xwuIJixDzYww8VHTI0
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2OTEzMjIwNSwiZXhwIjoxNzY5MTM1ODA1fQ.B7omzaKr_likDCGE0RYjYY23tqwjAEqHl28TKs1FooPF3L90Uk_0ucCbioVJKI_Y
 
 {
   "titulo": "Deep Learning para Totós",
