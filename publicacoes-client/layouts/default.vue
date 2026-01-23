@@ -55,10 +55,7 @@
               <span class="font-medium text-sm">Gestão de Users</span>
             </NuxtLink>
 
-            <NuxtLink to="/admin/history" class="flex items-center px-4 py-2.5 text-gray-600 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition group">
-              <i class="bi bi-clock-history mr-3 group-hover:text-orange-600"></i>
-              <span class="font-medium text-sm">Histórico Global</span>
-            </NuxtLink>
+  
           </template>
 
         </div>
