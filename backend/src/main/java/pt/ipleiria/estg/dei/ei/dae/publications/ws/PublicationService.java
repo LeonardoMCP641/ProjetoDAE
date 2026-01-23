@@ -9,10 +9,7 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.CommentDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.PublicationDTO;
 import pt.ipleiria.estg.dei.ei.dae.publications.dtos.RatingDTO;
-import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.CommentBean;
-import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.PublicationBean;
-import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.RatingBean;
-import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.UserBean;
+import pt.ipleiria.estg.dei.ei.dae.publications.ejbs.*;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Publication;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.User;
 import pt.ipleiria.estg.dei.ei.dae.publications.security.Authenticated;
@@ -24,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-
 @Path("publicacoes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -39,11 +35,15 @@ public class PublicationService {
     private UserBean userBean;
     @EJB
     private RatingBean ratingBean;
+    @EJB
+    private OllamaBean ollamaBean;
 
     @Context
     private SecurityContext securityContext;
 
-    private static final String UPLOAD_DIR = "C:/Users/Matilde/Desktop/uploads";
+    private static final String UPLOAD_DIR = "uploads";
+
+    // ============ ENDPOINTS PRINCIPAIS ============
 
     @GET
     @Path("/")
@@ -70,12 +70,85 @@ public class PublicationService {
         return Response.ok(new PublicationDTO(p)).build();
     }
 
+    // ============ ENDPOINTS DE IA ============
+
+    @POST
+    @Path("/gerar-resumo")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response gerarResumo(Map<String, Object> data) {
+        try {
+            String titulo = (String) data.get("titulo");
+            @SuppressWarnings("unchecked")
+            List<String> autores = (List<String>) data.get("autores");
+            String area = (String) data.get("area");
+            String tipo = (String) data.get("tipo");
+
+            if (titulo == null || autores == null || area == null || tipo == null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Campos obrigatórios em falta")
+                        .build();
+            }
+
+            String resumo = ollamaBean.generateSummary(titulo, autores, area, tipo);
+
+            return Response.ok(resumo).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao gerar resumo com IA")
+                    .build();
+        }
+    }
+
+    @POST
+    @Path("{id}/gerar-resumo")
+    public Response regenerateSummary(@PathParam("id") long id) {
+        Publication p = publicationBean.find(id);
+        if (p == null) return Response.status(Response.Status.NOT_FOUND).build();
+
+        String username = securityContext.getUserPrincipal().getName();
+        boolean isOwner = p.getUser().getUsername().equals(username);
+        boolean isChefe = securityContext.isUserInRole("Administrador") ||
+                securityContext.isUserInRole("Responsavel");
+
+        if (!isOwner && !isChefe) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        String novoResumo = ollamaBean.generateSummary(
+                p.getTitulo(),
+                p.getAutores(),
+                p.getArea(),
+                p.getTipo()
+        );
+
+        p.setResumoCurto(novoResumo);
+        User editor = userBean.findByUsername(username);
+        publicationBean.update(p, editor);
+
+        return Response.ok(new PublicationDTO(p)).build();
+    }
+
+    // ============ CRUD DE PUBLICAÇÕES ============
+
     @POST
     @Path("/")
     public Response createPublication(PublicationDTO dto) {
         String username = securityContext.getUserPrincipal().getName();
         User user = userBean.findByUsername(username);
         if (user == null) return Response.status(Response.Status.UNAUTHORIZED).build();
+
+        // Se não foi fornecido resumo, gerar automaticamente com IA
+        if (dto.getResumoCurto() == null || dto.getResumoCurto().trim().isEmpty()) {
+            String resumoIA = ollamaBean.generateSummary(
+                    dto.getTitulo(),
+                    dto.getAutores(),
+                    dto.getArea(),
+                    dto.getTipo()
+            );
+            dto.setResumoCurto(resumoIA);
+        }
 
         Publication p = publicationBean.create(dto, user);
         return Response.status(Response.Status.CREATED).entity(new PublicationDTO(p)).build();
@@ -129,6 +202,8 @@ public class PublicationService {
         publicationBean.delete(id);
         return Response.noContent().build();
     }
+
+    // ============ FICHEIROS ============
 
     @POST
     @Path("{id}/upload")
@@ -194,6 +269,8 @@ public class PublicationService {
                 .build();
     }
 
+    // ============ COMENTÁRIOS ============
+
     @POST
     @Path("{id}/comentarios")
     public Response commentPublication(@PathParam("id") long publicationId, CommentDTO commentDTO) {
@@ -228,14 +305,6 @@ public class PublicationService {
         return Response.ok().build();
     }
 
-    @POST
-    @Path("{id}/rating")
-    public Response ratePublication(@PathParam("id") long publicationId, RatingDTO dto) {
-        String username = securityContext.getUserPrincipal().getName();
-        ratingBean.rate(publicationId, username, dto.getValue());
-        return Response.ok().build();
-    }
-
     @PUT
     @Path("comentarios/{id}/visibilidade")
     @RolesAllowed({"Administrador", "Responsavel"})
@@ -248,5 +317,13 @@ public class PublicationService {
         }
     }
 
+    // ============ RATINGS ============
 
+    @POST
+    @Path("{id}/rating")
+    public Response ratePublication(@PathParam("id") long publicationId, RatingDTO dto) {
+        String username = securityContext.getUserPrincipal().getName();
+        ratingBean.rate(publicationId, username, dto.getValue());
+        return Response.ok().build();
+    }
 }
