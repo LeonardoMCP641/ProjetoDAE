@@ -23,7 +23,7 @@ public class NotificationBean {
             try {
                 emailBean.send(
                         user.getEmail(),                          // Destinatário
-                        "Nova Notificação - Plataforma DAE",      // Assunto
+                        "Nova Notificação - Plataforma XYZ",      // Assunto
                         message                                   // Corpo do email
                 );
             } catch (Exception e) {
