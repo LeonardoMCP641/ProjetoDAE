@@ -1,7 +1,7 @@
 package pt.ipleiria.estg.dei.ei.dae.publications.ejbs;
 
 import jakarta.ejb.Stateless;
-import jakarta.inject.Inject; // Importante
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pt.ipleiria.estg.dei.ei.dae.publications.entities.Notification;
@@ -14,13 +14,23 @@ public class NotificationBean {
     private EntityManager em;
 
     @Inject
-    private EmailBean emailBean; // Para enviar email
+    private EmailBean emailBean;
 
     public void create(User user, String message, Long pubId) {
         Notification n = new Notification(user, message, pubId);
         em.persist(n);
-        // Enviar Email
-        emailBean.send(user.getEmail(), "Nova Notificação - Plataforma XYZ", message);
+        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+            try {
+                emailBean.send(
+                        user.getEmail(),                          // Destinatário
+                        "Nova Notificação - Plataforma DAE",      // Assunto
+                        message                                   // Corpo do email
+                );
+            } catch (Exception e) {
+                System.err.println("Erro ao enviar notificação por email para " + user.getUsername());
+                e.printStackTrace();
+            }
+        }
     }
 
     public List<Notification> getUserNotifications(String username) {
